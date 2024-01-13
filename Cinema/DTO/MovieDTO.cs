@@ -6,6 +6,7 @@
         public int duration { get; set; }
         public string genre { get; set; }
         public bool available { get; set; }
+        DateTime dateUpdate { get; set; } = DateTime.UtcNow;
 
     }
 }

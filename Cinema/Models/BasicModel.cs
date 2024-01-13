@@ -6,7 +6,7 @@ namespace Cinema.Models
     {
         public int id { get; set; }
         public DateTime dateAdded { get; set; }
-        public DateTime dateUpdate {  get; set; }
+        public DateTime dateUpdate {  get; set; } = DateTime.UtcNow;
 
         public BasicModel()
         {

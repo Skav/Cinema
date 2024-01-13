@@ -13,18 +13,10 @@ namespace Cinema.Controllers
 {
     [Route("api/movies")]
     [ApiController]
-    public class MovieController : ControllerBase
+    public class MovieController : BaseController
     {
-        private static MapperConfiguration mapperConfig = new MapperConfiguration(cfg =>
+        public MovieController(AppDbContext context) : base(context)
         {
-            cfg.CreateMap<MoviesModel, MovieDTO>();
-            cfg.CreateMap<MovieDTO, MoviesModel>();
-        });
-        private Mapper mapper = new Mapper(mapperConfig);
-        private readonly AppDbContext _context;
-        public MovieController(AppDbContext context)
-        {
-            _context = context;
         }
 
         [HttpGet]
@@ -58,7 +50,8 @@ namespace Cinema.Controllers
             if(request == null || request.title == null || request.duration <= 0 || request.genre == null)
                 return BadRequest();
 
-            var movie = new MoviesModel(request.title, request.duration, request.genre, true);
+            var movie = mapper.Map<MoviesModel>(request);
+            movie.dateAdded = DateTime.UtcNow;
 
             if(await _context.Movies.AnyAsync(x => x.title == movie.title))
             {
@@ -103,11 +96,10 @@ namespace Cinema.Controllers
             if(dbObject == null)
                 return NotFound();
 
-            //dbObject = mapper.Map<MoviesModel>(request);
             _context.Entry(dbObject).CurrentValues.SetValues(request);
             var result = await _context.SaveChangesAsync();
 
-            return Ok(result);
+            return Ok(dbObject);
         }
     }
 }

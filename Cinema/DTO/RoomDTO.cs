@@ -6,6 +6,6 @@
         public int rows { get; set; }
         public int columns { get; set; }
         public int seatsInRow { get; set; }
-        DateTime dateUpdate { get; set; } = DateTime.UtcNow;
+        public DateTime dateUpdate { get; set; } = DateTime.UtcNow;
     }
 }

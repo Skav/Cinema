@@ -38,6 +38,8 @@ namespace Cinema.Models
                 .HasForeignKey(x => x.userId)
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasConstraintName("FK_POINTS_USERS");
+
+                entity.HasIndex(lp => lp.userId).IsUnique();
             });
 
             modelBuilder.Entity<ReviewsModel>(entity =>

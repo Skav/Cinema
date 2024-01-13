@@ -13,6 +13,10 @@ namespace Cinema.Controllers
             cfg.CreateMap<MovieDTO, MoviesModel>();
             cfg.CreateMap<RoomsModel, RoomDTO>();
             cfg.CreateMap<RoomDTO, RoomsModel>();
+            cfg.CreateMap<LoyalityPointsDTO, LoyalityPointsModel>();
+            cfg.CreateMap<LoyalityPointsModel, LoyalityPointsDTO>();
+            cfg.CreateMap<CouponsModel, CouponsDTO>();
+            cfg.CreateMap<CouponsDTO, CouponsModel>();
         });
         protected Mapper mapper = new Mapper(mapperConfig);
         protected readonly AppDbContext _context;

@@ -1,19 +1,20 @@
 using Cinema.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace Cinema
 {
     public class Program
     {
+
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
             builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -22,28 +23,21 @@ namespace Cinema
                 .AddDbContext<AppDbContext>(opt => opt.UseNpgsql(
                 builder.Configuration.GetConnectionString("PostgresConnectionString")));
 
-            // Add authentication with JWT Bearer Token
-            builder.Services.AddAuthentication()
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("OURSECRETKEY")), // Replace with your secret key
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        // Set issuer and audience if you want to validate them
-                    };
-                });
 
-            builder.Services.AddAuthorization();
+            // Add auth
+            builder.Services.AddAuthentication()
+                .AddBearerToken(IdentityConstants.BearerScheme);
+
+            builder.Services.AddAuthorizationBuilder();
 
             builder.Services.AddIdentityCore<UsersModel>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders(); // Add this to enable token generation
+                .AddApiEndpoints();
 
             var app = builder.Build();
+
+            app.MapIdentityApi<UsersModel>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -54,8 +48,8 @@ namespace Cinema
 
             app.UseHttpsRedirection();
 
-            app.UseAuthentication(); // Add this to enable authentication
             app.UseAuthorization();
+
 
             app.MapControllers();
 
@@ -72,7 +66,7 @@ namespace Cinema
                 }
             }
 
-            // Add basic admin
+            //Add basic admin
             using (var scope = app.Services.CreateScope())
             {
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UsersModel>>();

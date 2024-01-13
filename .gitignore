@@ -10,6 +10,11 @@
 *.userosscache
 *.sln.docstates
 
+Cinema/appsettings.json
+appsettings.json
+Cinema/Properties/launchSettings.json
+Cinema/appsettings.Development.json
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -361,3 +366,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Cinema/Properties/launchSettings.json
+/Cinema/appsettings.json

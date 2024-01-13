@@ -362,8 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Fody - auto-generated XML schema
-FodyWeavers.xsd
-/Cinema/Properties/launchSettings.json
-/Cinema/appsettings.json
-/Cinema/appsettings.Development.json
+Cinema/appsettings.json
+appsettings.json
+Cinema/Properties/launchSettings.json
+Cinema/appsettings.Development.json

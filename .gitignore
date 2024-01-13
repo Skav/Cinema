@@ -368,3 +368,4 @@ FodyWeavers.xsd
 /Cinema/Properties/launchSettings.json
 /Cinema/appsettings.json
 /Cinema/appsettings.Development.json
+/Cinema/wwwroot/js/login.js

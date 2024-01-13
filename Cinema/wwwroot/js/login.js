@@ -17,9 +17,14 @@
             return response.json();
         })
         .then(data => {
-            // Assuming 'data.token' is the property where the token is sent in the response
-            localStorage.setItem('token', data.token); // Store the token in local storage
-            alert('Success!');
+            // Assuming 'data.token' is the JWT token and 'data.expiresIn' is the token's expiry time in seconds
+            const token = data.accessToken;
+            const expiresIn = data.expiresIn; // The server should send the expiry time in seconds
+            const expirationDate = new Date(new Date().getTime() + expiresIn * 1000); // Convert to milliseconds
+            localStorage.setItem('token', token);
+            localStorage.setItem('tokenExpiration', expirationDate.toISOString()); // Store as ISO string
+
+            console.log('Success:', data);
             // Redirect to index page or show success message
             window.location.href = '/index.html'; // Redirect to the index page
         })

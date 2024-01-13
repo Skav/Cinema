@@ -1,7 +1,12 @@
-﻿using Cinema.Models;
+﻿using AutoMapper;
+using Cinema.DTO;
+using Cinema.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Text.Json;
 using System.Xml.Serialization;
 
 namespace Cinema.Controllers
@@ -10,6 +15,12 @@ namespace Cinema.Controllers
     [ApiController]
     public class MovieController : ControllerBase
     {
+        private static MapperConfiguration mapperConfig = new MapperConfiguration(cfg =>
+        {
+            cfg.CreateMap<MoviesModel, MovieDTO>();
+            cfg.CreateMap<MovieDTO, MoviesModel>();
+        });
+        private Mapper mapper = new Mapper(mapperConfig);
         private readonly AppDbContext _context;
         public MovieController(AppDbContext context)
         {
@@ -34,20 +45,69 @@ namespace Cinema.Controllers
             var movie = await _context.Movies.FirstOrDefaultAsync(x => x.id == id);
 
             if (movie == null)
-                return Ok("[]");
+                return Ok(JsonSerializer.Serialize(new {}));
 
             return Ok(movie);
         }
 
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> addMovie(string title, int duration, string genre)
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> addMovie([FromBody] MovieDTO request)
         {
-            var movie = new MoviesModel(title, duration, genre, true);
+            if(request == null || request.title == null || request.duration <= 0 || request.genre == null)
+                return BadRequest();
+
+            var movie = new MoviesModel(request.title, request.duration, request.genre, true);
+
+            if(await _context.Movies.AnyAsync(x => x.title == movie.title))
+            {
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Object already exists"
+                }));
+            }
             await _context.Movies.AddAsync(movie);
             await _context.SaveChangesAsync();
 
             return Ok(movie);
+        }
+
+        [HttpDelete]
+        [Route("{id:int}/delete")]
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> deleteMovie(int id)
+        {
+            if (!await _context.Movies.AnyAsync(x => x.id == id))
+            {
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Object doesn't exists"
+                }));
+            }
+            await _context.Movies.Where(x => x.id == id).ExecuteDeleteAsync();
+
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("{id:int}/edit")]
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> updateMovie(int id, [FromBody] MovieDTO request)
+        {
+            if (request == null)
+                return BadRequest();
+
+            var dbObject = await _context.Movies.FindAsync(id);
+
+            if(dbObject == null)
+                return NotFound();
+
+            //dbObject = mapper.Map<MoviesModel>(request);
+            _context.Entry(dbObject).CurrentValues.SetValues(request);
+            var result = await _context.SaveChangesAsync();
+
+            return Ok(result);
         }
     }
 }

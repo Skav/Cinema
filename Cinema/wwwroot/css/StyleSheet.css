@@ -1,2 +1,21 @@
 ﻿body {
 }
+
+/* Style for the floating box */
+#floatingBox {
+    position: fixed; /* Fixed position to keep it visible */
+    top: 20px; /* Distance from the bottom of the viewport */
+    left: 20px; /* Distance from the right of the viewport */
+    padding: 10px; /* Padding inside the box */
+    background-color: #007bff; /* Background color */
+    color: white; /* Text color */
+    border-radius: 5px; /* Rounded corners */
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+    #floatingBox a {
+        color: white; /* Text color for the link */
+        text-decoration: none; /* No underline for the link */
+        font-weight: bold; /* Bold font for the link */
+    }
+

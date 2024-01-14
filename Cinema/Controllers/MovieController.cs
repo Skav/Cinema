@@ -23,6 +23,8 @@ namespace Cinema.Controllers
         public async Task<IActionResult> getMovies()
         {
             var movies = await _context.Movies.ToListAsync();
+            if (movies == null || movies.Count() == 0)
+                return Ok(JsonSerializer.Serialize(new {}));
             return Ok(movies);
         }
 

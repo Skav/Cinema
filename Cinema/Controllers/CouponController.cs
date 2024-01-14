@@ -57,6 +57,12 @@ namespace Cinema.Controllers
             if (request == null || request.discount == null || request.discountType == null || request.userId == null)
                 return BadRequest();
 
+            if (!await _context.Users.Where(x => x.Id == request.userId).AnyAsync())
+                return BadRequest(JsonSerializer.Serialize(new
+                {
+                    Error = "User with given ID doesn't exists!"
+                }));
+
 
             var coupon = mapper.Map<CouponsModel>(request);
             coupon.dateAdded = DateTime.UtcNow;
@@ -76,6 +82,12 @@ namespace Cinema.Controllers
         {
             if (request == null || couponId == null)
                 return BadRequest();
+
+            if (request.userId != null && !await _context.Users.Where(x => x.Id == request.userId).AnyAsync())
+                return BadRequest(JsonSerializer.Serialize(new
+                {
+                    Error = "User with given ID doesn't exists!"
+                }));
 
             var dbObject = await _context.Coupons.Where(x => x.id == couponId).FirstOrDefaultAsync();
 

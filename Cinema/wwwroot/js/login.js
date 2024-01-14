@@ -8,12 +8,26 @@
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email, password: password }),
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
-            console.log('Success:', data);
+            // Assuming 'data.token' is the JWT token and 'data.expiresIn' is the token's expiry time in seconds
+            const token = data.accessToken;
+            const expiresIn = data.expiresIn; // The server should send the expiry time in seconds
+            var seconds = parseInt(expiresIn, 10);
+            const expirationDate = new Date(new Date().getTime() + seconds * 1000);
+            localStorage.setItem('token', token);
+            localStorage.setItem('tokenExpiration', expirationDate.toISOString()); // Store as ISO string
+
+            alert('Success!');
             // Redirect to index page or show success message
+            window.location.href = '/index.html'; // Redirect to the index page
         })
         .catch((error) => {
             console.error('Error:', error);

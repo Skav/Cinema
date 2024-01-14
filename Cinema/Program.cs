@@ -6,7 +6,7 @@ namespace Cinema
 {
     public class Program
     {
-        
+
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -54,7 +54,7 @@ namespace Cinema
             app.MapControllers();
 
             // Add roles
-            using(var scope = app.Services.CreateScope())
+            using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 var roles = new[] { "Admin", "Staff", "Customer" };
@@ -75,7 +75,7 @@ namespace Cinema
                 string email = "admin@admin.com";
                 string password = "Test12#";
 
-                if(await userManager.FindByEmailAsync(email) == null)
+                if (await userManager.FindByEmailAsync(email) == null)
                 {
                     var user = new UsersModel();
                     user.UserName = username;

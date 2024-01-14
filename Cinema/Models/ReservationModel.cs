@@ -10,7 +10,6 @@
         public string fullName {  get; set; }
         public bool isPaid {  get; set; }
         public string status {  get; set; }
-        public DateTime claimDate { get; set; }
         public virtual UsersModel User { get; set; }
         public virtual MovieShowModel MovieShow { get; set; }
     }

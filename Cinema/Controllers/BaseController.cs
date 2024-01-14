@@ -21,6 +21,8 @@ namespace Cinema.Controllers
             cfg.CreateMap<MovieShowDTO, MovieShowModel>();
             cfg.CreateMap<ReviewsModel, ReviewsDTO>();
             cfg.CreateMap<ReviewsDTO, ReviewsModel>();
+            cfg.CreateMap<ReservationModel, ReservationDTO>();
+            cfg.CreateMap<ReservationDTO, ReservationModel>();
         });
         protected Mapper mapper = new Mapper(mapperConfig);
         protected readonly AppDbContext _context;

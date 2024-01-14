@@ -83,9 +83,10 @@ namespace Cinema.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("userId")
+                        .IsUnique();
 
-                    b.ToTable("LoyalityPointsModels");
+                    b.ToTable("LoyalityPoints");
                 });
 
             modelBuilder.Entity("Cinema.Models.MovieShowModel", b =>
@@ -121,7 +122,7 @@ namespace Cinema.Migrations
 
                     b.HasIndex("roomId");
 
-                    b.ToTable("MovieShowModels");
+                    b.ToTable("MovieShow");
                 });
 
             modelBuilder.Entity("Cinema.Models.MoviesModel", b =>

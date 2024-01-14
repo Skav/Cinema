@@ -19,7 +19,7 @@ namespace Cinema.Controllers
         public async Task<IActionResult> getUserPoints()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userPoints = await _context.LoyalityPointsModels.FirstOrDefaultAsync(x => x.userId == userId);
+            var userPoints = await _context.LoyalityPoints.FirstOrDefaultAsync(x => x.userId == userId);
 
             if (userPoints == null)
                 return Ok(JsonSerializer.Serialize(new { }));
@@ -31,7 +31,7 @@ namespace Cinema.Controllers
         [Authorize]
         public async Task<IActionResult> getUserPoints(string userId)
         {
-            var userPoints = await _context.LoyalityPointsModels.FirstOrDefaultAsync(x => x.userId == userId);
+            var userPoints = await _context.LoyalityPoints.FirstOrDefaultAsync(x => x.userId == userId);
 
             if (userPoints == null)
                 return Ok(JsonSerializer.Serialize(new { }));
@@ -48,13 +48,19 @@ namespace Cinema.Controllers
                     Error = "You need to specify userId!"
                 }));
 
-            var dbObject = await _context.LoyalityPointsModels.FirstOrDefaultAsync(x => x.userId == request.userId);
+            if (!await _context.Users.Where(x => x.Id == request.userId).AnyAsync())
+                return BadRequest(JsonSerializer.Serialize(new
+                {
+                    Error = "User with given ID doesn't exists!"
+                }));
+
+            var dbObject = await _context.LoyalityPoints.FirstOrDefaultAsync(x => x.userId == request.userId);
 
             if (dbObject == null)
             {
                 var pointsModel = mapper.Map<LoyalityPointsModel>(request);
                 pointsModel.dateAdded = DateTime.UtcNow;
-                await _context.LoyalityPointsModels.AddAsync(pointsModel);
+                await _context.LoyalityPoints.AddAsync(pointsModel);
                 await _context.SaveChangesAsync();
                 return Ok(pointsModel);
             }
@@ -74,14 +80,14 @@ namespace Cinema.Controllers
                 return BadRequest();
 
 
-            if (!await _context.LoyalityPointsModels.AnyAsync(x => x.userId == userId))
+            if (!await _context.LoyalityPoints.AnyAsync(x => x.userId == userId))
             {
                 return Conflict(JsonSerializer.Serialize(new
                 {
                     error = "Object doesn't exists"
                 }));
             }
-            await _context.LoyalityPointsModels.Where(x => x.userId == userId).ExecuteDeleteAsync();
+            await _context.LoyalityPoints.Where(x => x.userId == userId).ExecuteDeleteAsync();
 
             return Ok();
         }

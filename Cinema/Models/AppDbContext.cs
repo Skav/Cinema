@@ -9,8 +9,8 @@ namespace Cinema.Models
         public virtual DbSet<MoviesModel> Movies { get; set; }
         public virtual DbSet<RoomsModel> Rooms { get; set; }
         public virtual DbSet<CouponsModel> Coupons { get; set; }
-        public virtual DbSet<LoyalityPointsModel> LoyalityPointsModels { get; set; }
-        public virtual DbSet<MovieShowModel> MovieShowModels { get; set; }
+        public virtual DbSet<LoyalityPointsModel> LoyalityPoints { get; set; }
+        public virtual DbSet<MovieShowModel> MovieShow { get; set; }
         public virtual DbSet<ReservationModel> Reservations { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 

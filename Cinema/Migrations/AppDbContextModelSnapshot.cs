@@ -246,7 +246,7 @@ namespace Cinema.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("ReviewsModel");
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Cinema.Models.RoomsModel", b =>

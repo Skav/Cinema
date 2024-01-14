@@ -12,6 +12,7 @@ namespace Cinema.Models
         public virtual DbSet<LoyalityPointsModel> LoyalityPoints { get; set; }
         public virtual DbSet<MovieShowModel> MovieShow { get; set; }
         public virtual DbSet<ReservationModel> Reservations { get; set; }
+        public virtual DbSet<ReviewsModel> Reviews { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
         {

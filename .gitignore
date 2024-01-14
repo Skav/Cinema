@@ -368,3 +368,4 @@ FodyWeavers.xsd
 /Cinema/Properties/launchSettings.json
 /Cinema/appsettings.json
 /Cinema/appsettings.Development.json
+/Cinema/Migrations/20240113212904_UpdateTables.cs

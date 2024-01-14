@@ -166,9 +166,6 @@ namespace Cinema.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<DateTime>("claimDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<DateTime>("dateAdded")
                         .HasColumnType("timestamp with time zone");
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Text.Json;
 
 namespace Cinema.Controllers
@@ -126,6 +127,54 @@ namespace Cinema.Controllers
             await _context.MovieShow.Where(x => x.id == movieShowId).ExecuteDeleteAsync();
 
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("{movieShowId:int}/getSeats")]
+        public async Task<IActionResult> getSeats(int movieShowId)
+        {
+            if (movieShowId == null)
+                return BadRequest();
+
+            var query = from movieShow in _context.MovieShow
+                        join room in _context.Rooms on movieShow.roomId equals room.id
+                        where movieShow.id == movieShowId
+                        select new
+                        {
+                            movieShow.id,
+                            movieShow.movieId,
+                            movieShow.hour,
+                            movieShow.date,
+                            room.rows,
+                            room.columns,
+                            room.roomNo
+                        };
+
+            var movieShowResponse = await query.FirstOrDefaultAsync();
+
+            if (movieShowResponse == null)
+                return NotFound();
+
+            var reservedSeatsQuery = await _context.Reservations.Where(x => x.movieShowId == movieShowId).ToListAsync();
+            Dictionary<int, List<int>> reservedSeats = new Dictionary<int, List<int>>();
+            if(reservedSeatsQuery.Count() != 0)
+            {
+                foreach (var item in reservedSeatsQuery)
+                    if (reservedSeats.ContainsKey(item.seatRow))
+                        reservedSeats[item.seatRow].Add(item.seatColumn);
+                    else
+                        reservedSeats.Add(item.seatRow, new List<int> { item.seatColumn });
+            }
+
+            return Ok(JsonSerializer.Serialize(new
+            {
+                movieShowId = movieShowId,
+                roomNo = movieShowResponse.roomNo,
+                rows = movieShowResponse.rows,
+                columns = movieShowResponse.columns,
+                reservedSeats = reservedSeats
+            }));
+
         }
     }
 }

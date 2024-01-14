@@ -1,21 +1,66 @@
 ﻿body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    background-color: #0d1117; /* GitHub dark mode background color */
+    color: #c9d1d9; /* GitHub text color */
+    margin: 0;
+    padding: 0;
 }
 
-/* Style for the floating box */
-#floatingBox {
-    position: fixed; /* Fixed position to keep it visible */
-    top: 20px; /* Distance from the bottom of the viewport */
-    left: 20px; /* Distance from the right of the viewport */
-    padding: 10px; /* Padding inside the box */
-    background-color: #007bff; /* Background color */
-    color: white; /* Text color */
-    border-radius: 5px; /* Rounded corners */
-    z-index: 1000; /* Ensure it's above other elements */
+table {
+    width: 90%;
+    margin: 20px auto; /* Centers the table horizontally with margin */
+    border-collapse: collapse;
+    background-color: #161b22; /* GitHub table background color */
+    color: #c9d1d9; /* GitHub text color */
 }
 
-    #floatingBox a {
-        color: white; /* Text color for the link */
-        text-decoration: none; /* No underline for the link */
-        font-weight: bold; /* Bold font for the link */
+th, td {
+    border: 1px solid #30363d; /* GitHub table border color */
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #21262d; /* GitHub table header background color */
+}
+
+tr:nth-child(even) {
+    background-color: #0d1117; /* GitHub table row background color */
+}
+
+/* Ensure all columns are equally wide */
+table {
+    table-layout: fixed;
+}
+
+/* Style the top bar to be attached to the top of the page */
+#topBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #161b22; /* GitHub top bar background color */
+    padding: 10px 15px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+    #topBar a {
+        color: #58a6ff; /* GitHub link color */
+        text-decoration: none;
+        padding: 5px 10px;
+        transition: color 0.2s;
     }
 
+        #topBar a:hover {
+            text-decoration: underline;
+            color: #1f6feb; /* GitHub link hover color */
+        }
+
+/* Add padding to the body to account for the fixed top bar */
+body {
+    padding-top: 50px; /* Adjust based on the height of the top bar */
+}

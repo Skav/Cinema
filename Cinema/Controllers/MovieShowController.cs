@@ -155,15 +155,37 @@ namespace Cinema.Controllers
             if (movieShowResponse == null)
                 return NotFound();
 
-            var reservedSeatsQuery = await _context.Reservations.Where(x => x.movieShowId == movieShowId).ToListAsync();
+            var reservedSeatsQuery = await _context.Reservations
+                .Where(x => x.movieShowId == movieShowId)
+                .Where(x => x.status == "Confirmed" || x.status == "in_progress")
+                .ToListAsync();
+
             Dictionary<int, List<int>> reservedSeats = new Dictionary<int, List<int>>();
             if(reservedSeatsQuery.Count() != 0)
             {
+                foreach (var item in  reservedSeatsQuery)
+                {
+                    if(item.status == "in_progress")
+                    {
+                        if (DateTime.UtcNow > item.dateAdded.AddMinutes(15))
+                        {
+                            _context.Entry(item).CurrentValues.SetValues(new { status = "Cancelled" });
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
+
+
+
                 foreach (var item in reservedSeatsQuery)
+                {
+                    if (item.status == "Cancelled")
+                        continue;
                     if (reservedSeats.ContainsKey(item.seatRow))
                         reservedSeats[item.seatRow].Add(item.seatColumn);
                     else
                         reservedSeats.Add(item.seatRow, new List<int> { item.seatColumn });
+                }
             }
 
             return Ok(JsonSerializer.Serialize(new

@@ -130,18 +130,34 @@ namespace Cinema.Controllers
             reservation.email = userData.Email;
             reservation.fullName = userData.UserName;
 
-            if (await _context.Reservations.Where(x => x.movieShowId == reservation.movieShowId)
+            var reservedSeat = await _context.Reservations.Where(x => x.movieShowId == reservation.movieShowId)
                 .Where(x => x.seatRow == reservation.seatRow)
                 .Where(x => x.seatColumn == reservation.seatColumn)
-                .AnyAsync())
-                return Conflict(JsonSerializer.Serialize(new
-                {
-                    Error = $"Seat is reserved",
-                    seatRow = reservation.seatRow,
-                    seatColumn = reservation.seatColumn
-                }));
+                .Where(x => x.status == "Confirmed" || x.status == "in_progress")
+                .FirstOrDefaultAsync();
+                
 
-            await _context.Reservations.AddAsync(reservation);
+            if (reservedSeat != null)
+            {
+                if (reservedSeat.status == "in_progress")
+                {
+                    if (DateTime.UtcNow > reservedSeat.dateAdded.AddMinutes(15))
+                    {
+                        _context.Entry(reservedSeat).CurrentValues.SetValues(new { status = "Cancelled" });
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                if (reservedSeat.status != "Cancelled")
+                    return Conflict(JsonSerializer.Serialize(new
+                    {
+                        Error = $"Seat is reserved",
+                        seatRow = reservation.seatRow,
+                        seatColumn = reservation.seatColumn
+                    }));
+            }
+
+                await _context.Reservations.AddAsync(reservation);
             await _context.SaveChangesAsync();
             return Created("", JsonSerializer.Serialize(new
             {

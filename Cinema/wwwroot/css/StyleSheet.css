@@ -78,40 +78,90 @@
     margin: 20px 0;
 }
 
+.movieContainer {
+    display: grid;
+    justify-content: space-around;
+    align-items: center;
+    grid-template-columns: 25% 25%;
+    grid-template-rows: auto;
+    border: 2px solid white;
+    background-color: #21262d;
+    color: white;
+    grid-template-areas:
+        "title title"
+        "genre duration"
+        "description description"
+}
+
+.movieTitle {
+    text-align: center;
+    grid-area: title;
+}
+
+.movieGenre {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    grid-area: genre;
+}
+
+.movieDuration {
+    grid-area: duration;
+    text-align: center;
+}
+
+.movieDescription {
+    grid-area: description;
+    text-align: center;
+}
+
+.reviewContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 0.5fr); 
+    grid-gap: 10px; 
+    text-align: center;
+}
+
+.reviewItem {
+    border: 1px solid #ddd;
+    padding: 20px;
+    background-color: #21262d;
+    color: white;
+}
+
 table {
     width: 90%;
     margin: 20px auto; /* Centers the table horizontally with margin */
     border-collapse: collapse;
-    background-color: #161b22; /* GitHub table background color */
-    color: #c9d1d9; /* GitHub text color */
-}
+    background-color: #161b22;
+    color: #c9d1d9;
 
 th, td {
-    border: 1px solid #30363d; /* GitHub table border color */
+    border: 1px solid #30363d; 
     text-align: left;
     padding: 8px;
 }
 
 th {
-    background-color: #21262d; /* GitHub table header background color */
+    background-color: #21262d;
 }
 
 tr:nth-child(even) {
-    background-color: #0d1117; /* GitHub table row background color */
+    background-color: #0d1117;
 }
 
-/* Ensure all columns are equally wide */
+
 table {
     table-layout: fixed;
 }
 
-/* Style the top bar to be attached to the top of the page */
+
 #topBar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    background-color: #161b22; /* GitHub top bar background color */
+    background-color: #161b22;
     padding: 10px 15px;
     z-index: 1000;
     display: flex;
@@ -121,7 +171,7 @@ table {
 }
 
     #topBar a {
-        color: #58a6ff; /* GitHub link color */
+        color: #58a6ff; 
         text-decoration: none;
         padding: 5px 10px;
         transition: color 0.2s;
@@ -129,10 +179,9 @@ table {
 
         #topBar a:hover {
             text-decoration: underline;
-            color: #1f6feb; /* GitHub link hover color */
+            color: #1f6feb; 
         }
 
-/* Add padding to the body to account for the fixed top bar */
 body {
-    padding-top: 50px; /* Adjust based on the height of the top bar */
+    padding-top: 50px; 
 }

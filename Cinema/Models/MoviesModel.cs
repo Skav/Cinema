@@ -5,6 +5,7 @@
         public string title {  get; set; }
         public int duration { get; set; }
         public string genre { get; set; }
+        public string description { get; set; }
         public bool available { get; set; }
         public virtual ICollection<MovieShowModel> MoviesShows { get; set; }
         public virtual ICollection<ReviewsModel> Reviews { get; set; }

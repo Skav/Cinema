@@ -44,7 +44,7 @@ namespace Cinema.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> addRoom([FromBody] RoomDTO request)
         {
-            if (request == null || request.seatsInRow <= 0 || request.rows <= 0 || request.columns <= 0 || request.roomNo <= 0)
+            if (request == null || request.seatsInRow <= 0 || request.rows <= 0 || request.seatsInRow <= 0 || request.roomNo <= 0)
                 return BadRequest();
 
             var room = mapper.Map<RoomsModel>(request);

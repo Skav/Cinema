@@ -101,7 +101,7 @@ namespace Cinema.Controllers
                         {
                             movieShow.id,
                             room.rows,
-                            room.columns,
+                            room.seatsInRow,
                         };
 
             var movieShowResponse = await query.FirstOrDefaultAsync();
@@ -117,7 +117,7 @@ namespace Cinema.Controllers
                     Error = "seatRow and seatColumn must be greater than 0!"
                 }));
 
-            if (request.seatRow > movieShowResponse.rows || request.seatColumn > movieShowResponse.columns)
+            if (request.seatRow > movieShowResponse.rows || request.seatColumn > movieShowResponse.seatsInRow)
                 return BadRequest(JsonSerializer.Serialize(new
                 {
                     Error = "seatRow or seatColumn are above room limits"

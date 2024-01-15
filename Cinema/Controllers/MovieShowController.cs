@@ -29,6 +29,21 @@ namespace Cinema.Controllers
         }
 
         [HttpGet]
+        [Route("movie/{movieId:int}")]
+        public async Task<IActionResult> getMovieShows(int movieId)
+        {
+            if (movieId == 0) 
+                return BadRequest();
+
+            var moviesShow = await _context.MovieShow.Where(x => x.movieId == movieId).Where(x => x.date >= DateTime.UtcNow).ToListAsync();
+
+            if (moviesShow == null || moviesShow.Count() == 0)
+                return Ok(JsonSerializer.Serialize(new { }));
+
+            return Ok(moviesShow);
+        }
+
+        [HttpGet]
         [Route("all")]
         [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> getAllMovieShows()
@@ -146,7 +161,7 @@ namespace Cinema.Controllers
                             movieShow.hour,
                             movieShow.date,
                             room.rows,
-                            room.columns,
+                            room.seatsInRow,
                             room.roomNo
                         };
 
@@ -193,7 +208,7 @@ namespace Cinema.Controllers
                 movieShowId = movieShowId,
                 roomNo = movieShowResponse.roomNo,
                 rows = movieShowResponse.rows,
-                columns = movieShowResponse.columns,
+                seatInRow = movieShowResponse.seatsInRow,
                 reservedSeats = reservedSeats
             }));
 

@@ -68,6 +68,33 @@ namespace Cinema.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("movie/{movieId:int}")]
+        public async Task<IActionResult> getReviewByMovieIdDetails(int movieId)
+        {
+            var query = from reviews in _context.Reviews
+                        join users in _context.Users on reviews.userId equals users.Id
+                        join movies in _context.Movies on reviews.movieId equals movies.id
+                        where reviews.movieId == movieId
+                        select new
+                        {
+                            reviews.id,
+                            reviews.rating,
+                            reviews.content,
+                            reviews.movieId,
+                            users.UserName,
+                            movies.title
+                        };
+
+            var result = await query.ToListAsync();
+
+
+            if (result.Count == 0)
+                return Ok(JsonSerializer.Serialize(new { }));
+
+            return Ok(result);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> addReviewByUser([FromBody] ReviewsDTO request)
@@ -99,6 +126,12 @@ namespace Cinema.Controllers
                 return BadRequest(JsonSerializer.Serialize(new
                 {
                     Error = "Movie with given ID doesn't exists!"
+                }));
+
+            if (await _context.Reviews.Where(x => x.userId == request.userId).Where(x => x.movieId == request.movieId).AnyAsync())
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    Error = "User already added review to this movie"
                 }));
 
             var review = mapper.Map<ReviewsModel>(request);

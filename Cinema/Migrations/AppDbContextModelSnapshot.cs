@@ -142,6 +142,10 @@ namespace Cinema.Migrations
                     b.Property<DateTime>("dateUpdate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("duration")
                         .HasColumnType("integer");
 

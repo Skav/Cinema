@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace Cinema.Controllers
 {
-    [Route("api/loayalityPoints")]
+    [Route("api/loyalityPoints")]
     [ApiController]
     public class LoyalityPointyController : BaseController
     {

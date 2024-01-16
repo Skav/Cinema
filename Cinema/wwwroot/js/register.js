@@ -1,7 +1,7 @@
 ﻿document.getElementById('registerForm').addEventListener('submit', function (event) {
     event.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const email = document.getElementById('emailRegister').value;
+    const password = document.getElementById('passwordRegister').value;
 
     fetch('/register', {
         method: 'POST',

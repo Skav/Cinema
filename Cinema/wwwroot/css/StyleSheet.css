@@ -39,13 +39,13 @@ a:visited {
     margin-bottom: 10px;
 }
 
-    .form-style input {
-        margin-bottom: 15px;
-        padding: 14px;
-        border: 1px solid #dddfe2;
-        border-radius: 6px;
-        font-size: 17px;
-    }
+.form-style input {
+    margin-bottom: 15px;
+    padding: 14px;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
+    font-size: 17px;
+}
 
 .btn-login {
     padding: 10px 15px;
@@ -111,6 +111,7 @@ a:visited {
 .movieTitle {
     text-align: center;
     grid-area: title;
+    font-size: 25px;
 }
 
 .movieGenre {
@@ -130,6 +131,10 @@ a:visited {
     text-align: center;
 }
 
+.movieTime {
+    text-align: center
+}
+
 .reviewContainer {
     display: grid;
     grid-template-columns: repeat(4, 0.5fr); 
@@ -144,14 +149,47 @@ a:visited {
     color: white;
 }
 
+.reserved {
+    background-color: red;
+    text-align:center;
+}
+
+.free {
+    background-color: green;
+    text-align: center;
+}
+
+.selected{
+    background-color: gray;
+    text-align: center;
+}
+
+.screen {
+    background-color: lightgray;
+    text-align:center;
+    color: black;
+}
+
+.screenSeatGap{
+    background-color: darkgray;
+}
+
+.reservationMenu {
+    margin-top: auto;
+    margin: auto;
+    align-content: center;
+    width: 30%;
+    padding: 20px;
+    text-align: center;
+}
+
 table {
     width: 90%;
     margin: 20px auto; /* Centers the table horizontally with margin */
     border-collapse: collapse;
     background-color: #161b22;
     color: #c9d1d9;
-
-th, td {
+    th, td {
     border: 1px solid #30363d; 
     text-align: left;
     padding: 8px;

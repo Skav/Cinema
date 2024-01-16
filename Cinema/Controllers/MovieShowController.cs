@@ -153,11 +153,13 @@ namespace Cinema.Controllers
 
             var query = from movieShow in _context.MovieShow
                         join room in _context.Rooms on movieShow.roomId equals room.id
+                        join movie in _context.Movies on movieShow.movieId equals movie.id
                         where movieShow.id == movieShowId
                         select new
                         {
                             movieShow.id,
                             movieShow.movieId,
+                            movie.title,
                             movieShow.hour,
                             movieShow.date,
                             room.rows,
@@ -182,8 +184,10 @@ namespace Cinema.Controllers
                 {
                     if(item.status == "in_progress")
                     {
-                        if (DateTime.UtcNow > item.dateAdded.AddMinutes(15))
+                        var timeAdded = item.dateAdded;
+                        if (DateTime.UtcNow > timeAdded.AddMinutes(15))
                         {
+                            item.dateUpdate = DateTime.UtcNow;
                             _context.Entry(item).CurrentValues.SetValues(new { status = "Cancelled" });
                             await _context.SaveChangesAsync();
                         }
@@ -206,6 +210,9 @@ namespace Cinema.Controllers
             return Ok(JsonSerializer.Serialize(new
             {
                 movieShowId = movieShowId,
+                title = movieShowResponse.title,
+                movieHour = movieShowResponse.hour,
+                movieDate = movieShowResponse.date,
                 roomNo = movieShowResponse.roomNo,
                 rows = movieShowResponse.rows,
                 seatInRow = movieShowResponse.seatsInRow,

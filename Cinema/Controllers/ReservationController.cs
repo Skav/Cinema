@@ -66,9 +66,9 @@ namespace Cinema.Controllers
                     Error = "User with given ID doesn't exists!"
                 }));
 
-            var reservations = await _context.Reservations.Where(x => x.userId == userId).Where(x => x.id == reservationId).ToArrayAsync();
+            var reservations = await _context.Reservations.Where(x => x.userId == userId).Where(x => x.id == reservationId).FirstOrDefaultAsync();
 
-            if (reservations.Count() == 0)
+            if (reservations == null)
                 return Ok(JsonSerializer.Serialize(new { }));
 
             return Ok(reservations);

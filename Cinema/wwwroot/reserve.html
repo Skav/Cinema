@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reserve ticket</title>
+    <link rel="stylesheet" type="text/css" href="css/StyleSheet.css" />
+    <script type="module" src="js/token.js"></script>
+    <script src="js/checkIfLoggedIn.js"></script>
+</head>
+<body>
+    <div id="topBar">
+        <!-- WIll be filled by token.js -->
+    </div>
+
+    <div movieReservationContainer>
+        <p class="movieTitle" id="movieTitle"></p>
+        <p class="movieTime" id="movieTime"></p>
+        <table id="roomSeats">
+            <thead><!-- Rows --></thead>
+            <tbody><!-- Seats in row --></tbody>
+        </table>
+    </div>
+
+    <div class="reservationMenu">
+        <p id="noOfSeats">Selected seats: 0</p>
+        <input type="submit" class="btn-login" id="btnSubmit" value="RESERVED " />
+    </div>
+
+
+    <script src="js/reserve.js"></script>
+</body>
+</html>

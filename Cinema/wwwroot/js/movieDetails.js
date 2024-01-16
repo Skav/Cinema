@@ -41,7 +41,7 @@
                 let date = new Date(Date.parse(movieShow.date));
                 let reserveButton = document.createElement('a');
                 reserveButton.classList.add('reserveButton');
-                reserveButton.href = `/reserve?movieShowId=${movieShow.id}`;
+                reserveButton.href = `/reserve.html?movieShowId=${movieShow.id}`;
                 reserveButton.textContent = "Reserve";
 
                 row.insertCell().textContent = date.toDateString();

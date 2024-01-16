@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/StyleSheet.css">
+    <script src="js/checkIfLoggedIn.js"></script>
+    <script type="module" src="js/token.js"></script>
+    <title>Your Reservations</title>
+</head>
+<body>
+    <div id="topBar">
+        <!-- Add navigation links or other content here -->
+    </div>
+
+    <div id="loyaltyPointsContainer" style="text-align: center;">
+        <h2>Your points:</h2>
+        <div id="loyaltyPoints"></div>
+    </div>
+
+    <div style="display: flex; justify-content: center;">
+        <div style="width: 90%;">
+            <!-- Adjust the width as needed -->
+            <h1 style="text-align: center;">Your Reservations</h1>
+            <table id="reservationsTable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Day</th>
+                        <th>Time</th>
+                        <th>Row</th>
+                        <th>Seat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Reservation rows will be added here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

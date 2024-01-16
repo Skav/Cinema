@@ -258,9 +258,6 @@ namespace Cinema.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int>("columns")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("dateAdded")
                         .HasColumnType("timestamp with time zone");
 

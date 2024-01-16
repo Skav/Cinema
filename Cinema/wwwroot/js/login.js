@@ -17,13 +17,15 @@
             return response.json();
         })
         .then(data => {
-            // Assuming 'data.token' is the JWT token and 'data.expiresIn' is the token's expiry time in seconds
             const token = data.accessToken;
+            const refreshToken = data.refreshToken
             const expiresIn = data.expiresIn; // The server should send the expiry time in seconds
             var seconds = parseInt(expiresIn, 10);
             const expirationDate = new Date(new Date().getTime() + seconds * 1000);
             localStorage.setItem('token', token);
+            localStorage.setItem('refreshToken', refreshToken);
             localStorage.setItem('tokenExpiration', expirationDate.toISOString()); // Store as ISO string
+            localStorage.setItem('isLoggedIn', true);
 
             alert('Success!');
             // Redirect to index page or show success message

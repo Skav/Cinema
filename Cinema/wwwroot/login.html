@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="css/StyleSheet.css" />
+    <script type="module" src="js/token.js"></script>
 </head>
 <body>
     <div id="topBar">
-        <a href="/index.html">Home</a>
+    <!-- WIll be filled by token.js -->
     </div>
 
     <div class="form-container">
         <form id="loginForm" class="form-style">
-            <input type="text" id="emailLogin" placeholder="Email address" required>
-            <input type="password" id="passwordLogin" placeholder="Password" required>
+            <input type="text" id="email" placeholder="Email address" required>
+            <input type="password" id="password" placeholder="Password" required>
             <button type="submit" class="btn-login">Log In</button>
             <a href="register.html" class="btn-register">Register</a>
         </form>

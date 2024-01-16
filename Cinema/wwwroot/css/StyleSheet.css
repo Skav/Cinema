@@ -4,6 +4,21 @@
     color: #c9d1d9; /* GitHub text color */
     margin: 0;
     padding: 0;
+    padding-top: 50px;
+}
+
+a {
+    color: #dddfe2;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #dddfe2;
+    text-decoration: none;
+}
+
+#topBar > a {
+    padding: 10px;
 }
 
 .form-container {
@@ -170,18 +185,15 @@ table {
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 }
 
-    #topBar a {
-        color: #58a6ff; 
-        text-decoration: none;
-        padding: 5px 10px;
-        transition: color 0.2s;
-    }
-
-        #topBar a:hover {
-            text-decoration: underline;
-            color: #1f6feb; 
-        }
-
-body {
-    padding-top: 50px; 
+#topBar a {
+    color: #58a6ff; 
+    text-decoration: none;
+    padding: 5px 10px;
+    transition: color 0.2s;
 }
+
+#topBar a:hover {
+    text-decoration: underline;
+    color: #1f6feb; 
+}
+

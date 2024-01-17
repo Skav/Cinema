@@ -65,7 +65,7 @@ namespace Cinema.Controllers
             await _context.Movies.AddAsync(movie);
             await _context.SaveChangesAsync();
 
-            return Ok(movie);
+            return Created("", movie);
         }
 
         [HttpDelete]

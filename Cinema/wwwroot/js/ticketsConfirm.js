@@ -25,18 +25,41 @@ function getTicket(id) {
             const tableBody = document.getElementById('ticketsTable').querySelector('tbody');
             let tr = document.createElement('tr');
             let id = document.createElement('td');
-            let movie = document.createElement('td'); 
+            let movieTitle = document.createElement('td'); 
+            let roomNo = document.createElement('td');
             let date = document.createElement('td');
+            let seatNo = document.createElement('td');
 
-            console.log(data);
-
+            seatNo.innerHTML = `Row: ${data.seatRow} <br> Column: ${data.seatColumn}`;
             id.textContent = data.id;
-            movie.textContent = data.movieShowId;
-            date.textContent = "v:";
+
+            fetch(`/api/movieShows/${data.movieShowId}`).then(response => response.json())
+                .then(movieShow => {
+                    let movieDate = new Date(movieShow.date);
+                    let year = movieDate.getFullYear();
+                    let month = (movieDate.getMonth() + 1).toString().padStart(2, '0');
+                    let day = movieDate.getDate().toString().padStart(2, '0');
+
+                    date.textContent = `${day}-${month}-${year} ${movieShow.hour}`;
+
+                    fetch(`/api/movies/${movieShow.movieId}`).then(response => response.json())
+                        .then(movie => {
+                            movieTitle.textContent = movie.title;
+                        });
+
+                    fetch(`/api/rooms/${movieShow.roomId}`).then(response => response.json())
+                        .then(room => {
+                            roomNo.textContent = room.roomNo;
+                        })
+
+                        
+                })
 
             tr.appendChild(id);
-            tr.appendChild(movie);
-            tr.appendChild(date);
+            tr.appendChild(movieTitle);
+            tr.appendChild(roomNo);
+            tr.appendChild(seatNo);
+            tr.appendChild(date);      
             tableBody.appendChild(tr);
             
         })
@@ -46,24 +69,24 @@ function getTicket(id) {
         });
 }
 
-document.getElementById('btnAccept').addEventListener('click', function () {
+document.getElementById('btnAccept').addEventListener('click', async function () {
     let reservationList = localStorage.getItem('reservation_ids').split(',');
 
-    reservationList.forEach(ticket => {
-        confirm(ticket);
-    })
+    for (const ticket of reservationList) {
+        await confirm(ticket);
+    }
 
     localStorage.removeItem('reservation_ids');
 
     alert("Confirmed reservation!");
     window.location.href = '/index.html'
 })
-document.getElementById('btnCancel').addEventListener('click', function () {
+document.getElementById('btnCancel').addEventListener('click', async function () {
     let reservationList = localStorage.getItem('reservation_ids').split(',');
 
-    reservationList.forEach(ticket => {
-        cancel(ticket);
-    })
+    for (const ticket of reservationList) {  
+        await cancel(ticket);
+    }
 
     localStorage.removeItem('reservation_ids');
     alert("Canceled reservation!");
@@ -71,8 +94,8 @@ document.getElementById('btnCancel').addEventListener('click', function () {
 })
 
 
-function confirm(id) {
-    fetch(`/api/reservations/${id}/confirmReservation`, {
+async function confirm(id) {
+    return fetch(`/api/reservations/${id}/confirmReservation`, {
         method: "PUT",
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -91,8 +114,8 @@ function confirm(id) {
         });
 }
 
-function cancel(id) {
-    fetch(`/api/reservations/${id}/cancelReservation`, {
+async function cancel(id) {
+    return fetch(`/api/reservations/${id}/cancelReservation`, {
         method: "DELETE",
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,

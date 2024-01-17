@@ -29,6 +29,18 @@ namespace Cinema.Controllers
         }
 
         [HttpGet]
+        [Route("{movieShowId:int}")]
+        public async Task<IActionResult> getMovieShowsById(int movieShowId)
+        {
+            var moviesShow = await _context.MovieShow.Where(x => x.id == movieShowId).FirstOrDefaultAsync();
+
+            if (moviesShow == null)
+                return Ok(JsonSerializer.Serialize(new { }));
+
+            return Ok(moviesShow);
+        }
+
+        [HttpGet]
         [Route("movie/{movieId:int}")]
         public async Task<IActionResult> getMovieShows(int movieId)
         {
@@ -153,13 +165,11 @@ namespace Cinema.Controllers
 
             var query = from movieShow in _context.MovieShow
                         join room in _context.Rooms on movieShow.roomId equals room.id
-                        join movie in _context.Movies on movieShow.movieId equals movie.id
                         where movieShow.id == movieShowId
                         select new
                         {
                             movieShow.id,
                             movieShow.movieId,
-                            movie.title,
                             movieShow.hour,
                             movieShow.date,
                             room.rows,
@@ -210,14 +220,14 @@ namespace Cinema.Controllers
             return Ok(JsonSerializer.Serialize(new
             {
                 movieShowId = movieShowId,
-                title = movieShowResponse.title,
+                movieId = movieShowResponse.id,
                 movieHour = movieShowResponse.hour,
                 movieDate = movieShowResponse.date,
                 roomNo = movieShowResponse.roomNo,
                 rows = movieShowResponse.rows,
                 seatInRow = movieShowResponse.seatsInRow,
                 reservedSeats = reservedSeats
-            }));
+            })) ;
 
         }
     }

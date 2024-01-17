@@ -10,8 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json();
         })
         .then(data => {
-            console.log(data)
-            console.log(data.reservedSeats)
             const tableHead = document.getElementById('roomSeats').querySelector('thead');
             const tableBody = document.getElementById('roomSeats').querySelector('tbody');
             const movieTitle = document.getElementById('movieTitle');
@@ -22,8 +20,12 @@ document.addEventListener('DOMContentLoaded', function () {
             var month = (movieDate.getMonth() + 1).toString().padStart(2, '0'); 
             var day = movieDate.getDate().toString().padStart(2, '0');
 
-            movieTitle.textContent = data.title;
-            movieTime.textContent = `${day}-${month}-${year} ${data.movieHour}`;
+            fetch(`/api/movies/${data.movieId}`).then(response => response.json())
+                .then(movie => {
+                    movieTitle.textContent = movie.title;
+                    movieTime.textContent = `${day}-${month}-${year} ${data.movieHour}`;
+                })
+           
 
 
             const rows = data.rows;
@@ -102,7 +104,7 @@ document.getElementById('btnSubmit').addEventListener('click', function (event) 
             }
             return response.json();
         })
-        .then(data => {
+        .then(async function(data) {
             let reservedSeats = data.reservedSeats;
             const rows = data.rows;
             const seatInRow = data.seatInRow;
@@ -125,9 +127,10 @@ document.getElementById('btnSubmit').addEventListener('click', function (event) 
             for (let seatItem of seatsToReserve) {
                 var [row, seat] = seatItem.split('-');
 
-                reserveSeat(row, seat, movieShowId);
+                await reserveSeat(row, seat, movieShowId);
             }
-            alert("Reserved!");
+
+            //alert("Reserved!");
             window.location.href = '/ticketConfirm.html'
         })
         .catch(error => {
@@ -136,8 +139,8 @@ document.getElementById('btnSubmit').addEventListener('click', function (event) 
         });
 })
 
-function reserveSeat(row, column, movieShowId) {
-    fetch('/api/reservations', {
+async function reserveSeat(row, column, movieShowId) {
+    return fetch('/api/reservations', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,

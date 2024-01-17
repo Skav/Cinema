@@ -42,7 +42,7 @@ namespace Cinema.Controllers
                     Error = "User with given ID doesn't exists!"
                 }));
 
-            var reservations = await _context.Reservations.Where(x => x.userId == userId).ToArrayAsync();
+            var reservations = await _context.Reservations.Where(x => x.userId == userId).Where(x => x.status != "Cancelled").ToArrayAsync();
 
             if (reservations.Count() == 0)
                 return Ok(JsonSerializer.Serialize(new { }));
@@ -188,6 +188,20 @@ namespace Cinema.Controllers
 
             if (reservation == null)
                 return NotFound();
+
+            var loyalityPoints = await _context.LoyalityPoints.Where(x => x.userId == userId).FirstOrDefaultAsync();
+
+            if(loyalityPoints == null)
+            {
+                var pointsDto = new LoyalityPointsModel();
+                pointsDto.userId = userId;
+                pointsDto.amountOfPoints = 10;
+                await _context.LoyalityPoints.AddAsync(pointsDto);
+            }
+            else
+            {
+                _context.Entry(loyalityPoints).CurrentValues.SetValues(new { amountOfPoints = loyalityPoints.amountOfPoints+10 });
+            }
 
             _context.Entry(reservation).CurrentValues.SetValues(new { status = "Confirmed" });
             await _context.SaveChangesAsync();

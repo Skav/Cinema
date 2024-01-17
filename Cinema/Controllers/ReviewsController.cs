@@ -69,6 +69,72 @@ namespace Cinema.Controllers
         }
 
         [HttpGet]
+        [Route("user")]
+        [Authorize]
+        public async Task<IActionResult> getUserReviews()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (userId == null)
+                return Unauthorized();
+
+            var query = from reviews in _context.Reviews
+                        join users in _context.Users on reviews.userId equals users.Id
+                        join movies in _context.Movies on reviews.movieId equals movies.id
+                        where reviews.userId == userId
+                        select new
+                        {
+                            reviews.id,
+                            reviews.rating,
+                            reviews.content,
+                            reviews.movieId,
+                            movies.title
+                        };
+
+            var result = await query.ToListAsync();
+
+
+            if (result.Count == 0)
+                return Ok(JsonSerializer.Serialize(new { }));
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("movie/{movieId:int}/user")]
+        [Authorize]
+        public async Task<IActionResult> getReviewByMovieIdDetailsForUser(int movieId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (userId == null)
+                return Unauthorized();
+
+            var query = from reviews in _context.Reviews
+                        join users in _context.Users on reviews.userId equals users.Id
+                        join movies in _context.Movies on reviews.movieId equals movies.id
+                        where reviews.movieId == movieId
+                        where userId == userId
+                        select new
+                        {
+                            reviews.id,
+                            reviews.rating,
+                            reviews.content,
+                            reviews.movieId,
+                            users.UserName,
+                            movies.title
+                        };
+
+            var result = await query.FirstOrDefaultAsync();
+
+
+            if (result == null)
+                return Ok(JsonSerializer.Serialize(new { }));
+
+            return Ok(result);
+        }
+
+        [HttpGet]
         [Route("movie/{movieId:int}")]
         public async Task<IActionResult> getReviewByMovieIdDetails(int movieId)
         {
@@ -140,7 +206,7 @@ namespace Cinema.Controllers
             await _context.Reviews.AddAsync(review);
             await _context.SaveChangesAsync();
 
-            return Ok(review);
+            return Created("", review);
         }
 
         [HttpPut]

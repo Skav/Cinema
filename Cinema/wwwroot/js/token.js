@@ -36,7 +36,7 @@ if (isLoggedIn == 'true') {
                 localStorage.setItem('tokenExpiration', expirationDate.toISOString()); // Store as ISO string
                 fillTopBar();
                 alert('Token refreshed!');
-                window.location.href = '/index.html';
+                window.location.reload;
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -79,7 +79,11 @@ function fillTopBar() {
         let loginButton = document.createElement('a');
         loginButton.href = '/login.html';
         loginButton.textContent = "Login";
+        let registerButton = document.createElement('a');
+        registerButton.href = '/register.html';
+        registerButton.textContent = "Register";
 
         topBar.appendChild(loginButton);
+        topBar.appendChild(registerButton);
     }
 }

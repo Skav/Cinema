@@ -60,7 +60,7 @@ namespace Cinema.Controllers
             await _context.Rooms.AddAsync(room);
             await _context.SaveChangesAsync();
 
-            return Ok(room);
+            return Created("", room);
         }
 
         [HttpDelete]

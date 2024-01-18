@@ -55,10 +55,41 @@ a:visited {
     border-radius: 6px;
     font-size: 20px;
     cursor: pointer;
+    text-align: center;
 }
 
-    .btn-login:hover {
-        background-color: #165db6;
+.btn-login:hover {
+    background-color: #165db6;
+}
+
+.btn-remove {
+    padding: 10px 15px;
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-remove:hover {
+    background-color: #c9302c;
+}
+
+.btn-accept {
+    padding: 10px 15px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+}
+
+    .btn-accept:hover {
+        background-color: #4cae4c;
     }
 
 .btn-register {
@@ -172,6 +203,14 @@ a:visited {
 
 .screenSeatGap{
     background-color: darkgray;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
 }
 
 .reservationMenu {

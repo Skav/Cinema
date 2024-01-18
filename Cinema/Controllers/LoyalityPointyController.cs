@@ -68,7 +68,7 @@ namespace Cinema.Controllers
             _context.Entry(dbObject).CurrentValues.SetValues(request);
             await _context.SaveChangesAsync();
 
-            return Ok(dbObject);
+            return Created("", dbObject);
         }
 
         [HttpDelete]

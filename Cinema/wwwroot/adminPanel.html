@@ -3,59 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Add Movie</title>
+    <title>Admin Panel</title>
     <link rel="stylesheet" type="text/css" href="css/StyleSheet.css" />
     <script src="js/checkIsAdmin.js"></script>
     <script type="module" src="js/token.js"></script>
 </head>
 <body>
     <div id="topBar">
-        <!-- Will be filled by token.js -->
+        <!--Will be filled by token.js-->
     </div>
 
-    <div class="form-container">
+    <br /><br />
+
+    <button type="button" id="addRoomBtn">ADD ROOM</button>
+
+    <div id="addRoomSection" style="display: none;">
+        <h2>Add Room</h2>
+        <form id="addRoomForm">
+            <label for="roomNo">Room Number:</label><br />
+            <input type="number" id="roomNo" name="roomNo" required><br><br>
+            <label for="rows">Rows:</label><br />
+            <input type="number" id="rows" name="rows" required><br><br>
+            <label for="seatsInRow">Seats in Row:</label><br />
+            <input type="number" id="seatsInRow" name="seatsInRow" required><br><br>
+            <button type="submit" id="submitRoomBtn">Submit</button>
+        </form>
+        <br><br>
+    </div>
+
+    <button type="button" id="manageMoviesBtn">ADD MOVIE</button>
+
+    <div id="addMovieSection" style="display: none;">
         <h2>Add Movie</h2>
         <form id="addMovieForm">
-            <label for="title">Title:</label>
+            <label for="title">Title:</label><br />
             <input type="text" id="title" name="title" required><br><br>
-            <label for="duration">Duration (in minutes):</label>
+            <label for="duration">Duration (in minutes):</label><br />
             <input type="number" id="duration" name="duration" required><br><br>
-            <label for="genre">Genre:</label>
+            <label for="genre">Genre:</label><br />
             <input type="text" id="genre" name="genre" required><br><br>
-            <label for="description">Description:</label>
+            <label for="description">Description:</label><br />
             <textarea id="description" name="description" required></textarea><br><br>
             <button type="button" id="addMovieBtn">Add Movie</button>
         </form>
+        <br><br>
     </div>
 
-    <div class="form-container">
-        <h2>Add Room</h2>
-        <form id="addRoomForm">
-            <label for="roomNo">Room Number:</label>
-            <input type="number" id="roomNo" name="roomNo" required><br><br>
-            <label for="rows">Rows:</label>
-            <input type="number" id="rows" name="rows" required><br><br>
-            <label for="seatsInRow">Seats in Row:</label>
-            <input type="number" id="seatsInRow" name="seatsInRow" required><br><br>
-            <button type="button" id="addRoomBtn">Add Room</button>
-        </form>
-        <div id="roomSuccessMessage" style="display:none;">Successfully added the room!</div>
-    </div>
+    <button type="button" id="manageShowsBtn">ADD SHOW</button>
 
-    <div class="form-container">
+    <div id="addShowSection" style="display: none;">
         <h2>Add Movie Show</h2>
-        <form id="addMovieShowForm">
-            <label for="roomID">Room ID:</label>
+        <form id="addShowForm">
+            <label for="roomID">Room ID:</label><br />
             <input type="number" id="roomID" name="roomID" required><br><br>
-            <label for="movieID">Movie ID:</label>
+            <label for="movieID">Movie ID:</label><br />
             <input type="number" id="movieID" name="movieID" required><br><br>
-            <label for="date">Date:</label>
+            <label for="date">Date:</label><br />
             <input type="datetime-local" id="date" name="date" required><br><br>
-            <label for="hour">Hour:</label>
+            <label for="hour">Hour:</label><br />
             <input type="time" id="hour" name="hour" required><br><br>
-            <button type="button" id="addMovieShowBtn">Add Movie Show</button>
+            <button type="button" id="addShowBtn">Add Show</button>
         </form>
-        <div id="successMessage" style="display:none;">Successfully added the movie show!</div>
+        <br><br>
+    </div>
+
+    <br /><br />
+
+    <h2>ROOMS</h2>
+    <div id="roomListContainer">
+        <table id="roomListTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Room Number</th>
+                    <th>Rows</th>
+                    <th>Seats in Row</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Room rows will be added here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <br /><br />
+
+    <h2>MOVIES</h2>
+    <div id="movieListContainer">
+        <table id="movieListTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Duration</th>
+                    <th>Genre</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--Movie rows will be added here by JavaScript-->
+            </tbody>
+        </table>
+    </div>
+
+    <br /><br />
+
+    <h2>MOVIE SHOWS</h2>
+    <div id="movieShowsListContainer">
+        <table id="movieShowsListTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Room ID</th>
+                    <th>Movie ID</th>
+                    <th>Date</th>
+                    <th>Hour</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Movie show rows will be added here by JavaScript -->
+            </tbody>
+        </table>
     </div>
 
     <script src="js/adminPanel.js"></script>

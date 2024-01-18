@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Add Movie</title>
+    <link rel="stylesheet" type="text/css" href="css/StyleSheet.css" />
+    <script type="module" src="js/token.js"></script>
+</head>
+<body>
+    <div id="topBar">
+        <!-- Will be filled by token.js -->
+    </div>
+
+    <div class="form-container">
+        <h2>Add Movie</h2>
+        <form id="addMovieForm">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required><br><br>
+            <label for="duration">Duration (in minutes):</label>
+            <input type="number" id="duration" name="duration" required><br><br>
+            <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="genre" required><br><br>
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea><br><br>
+            <button type="button" onclick="addMovie()">Add Movie</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>Add Room</h2>
+        <form id="addRoomForm">
+            <label for="roomNo">Room Number:</label>
+            <input type="number" id="roomNo" name="roomNo" required><br><br>
+            <label for="rows">Rows:</label>
+            <input type="number" id="rows" name="rows" required><br><br>
+            <label for="seatsInRow">Seats in Row:</label>
+            <input type="number" id="seatsInRow" name="seatsInRow" required><br><br>
+            <button type="button" onclick="addRoom()">Add Room</button>
+        </form>
+        <div id="roomSuccessMessage" style="display:none;">Successfully added the room!</div>
+    </div>
+
+    <div class="form-container">
+        <h2>Add Movie Show</h2>
+        <form id="addMovieShowForm">
+            <label for="roomID">Room ID:</label>
+            <input type="number" id="roomID" name="roomID" required><br><br>
+            <label for="movieID">Movie ID:</label>
+            <input type="number" id="movieID" name="movieID" required><br><br>
+            <label for="date">Date:</label>
+            <input type="datetime-local" id="date" name="date" required><br><br>
+            <label for="hour">Hour:</label>
+            <input type="time" id="hour" name="hour" required><br><br>
+            <button type="button" onclick="addMovieShow()">Add Movie Show</button>
+        </form>
+        <div id="successMessage" style="display:none;">Successfully added the movie show!</div>
+    </div>
+
+    <script src="js/adminPanel.js"></script>
+</body>
+</html>

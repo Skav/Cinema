@@ -1,9 +1,70 @@
-﻿// Function to add a movie
-document.getElementById('addMovieBtn').addEventListener('click', () => {
+﻿document.addEventListener('DOMContentLoaded', function () {
+    fetch('/api/movies', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+        .then(response => response.json())
+        .then(movies => {
+            const movieListTableBody = document.querySelector('#movieListTable tbody');
+            movies.forEach(movie => {
+                const row = movieListTableBody.insertRow();
+                row.innerHTML = `
+                <td>${movie.id}</td>
+                <td>${movie.title}</td>
+                <td>${movie.duration}</td>
+                <td>${movie.genre}</td>
+                `;
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
+
+function showMovieShows(movieId) {
+    // Implement the logic to show movie shows for the given movieId
+    console.log('Show shows for movie ID:', movieId);
+    // You might want to navigate to another page or open a modal with the movie shows
+}
+
+document.getElementById('manageMoviesBtn').addEventListener('click', function () {
+    document.getElementById('addMovieSection').style.display = 'block';
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('/api/rooms', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+        .then(response => response.json())
+        .then(rooms => {
+            const roomListTableBody = document.querySelector('#roomListTable tbody');
+            rooms.forEach(room => {
+                const row = roomListTableBody.insertRow();
+                row.innerHTML = `
+                <td>${room.id}</td>
+                <td>${room.roomNo}</td>
+                <td>${room.rows}</td>
+                <td>${room.seatsInRow}</td>
+            `;
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
+document.getElementById('addMovieBtn').addEventListener('click', function () {
     const title = document.getElementById('title').value;
     const duration = parseInt(document.getElementById('duration').value);
     const genre = document.getElementById('genre').value;
     const description = document.getElementById('description').value;
+    const token = localStorage.getItem('token');
 
     if (title == "" || title == null) {
         alert("Title cannot be empty!");
@@ -31,21 +92,16 @@ document.getElementById('addMovieBtn').addEventListener('click', () => {
         duration: duration,
         genre: genre,
         description: description,
-        available: true, // Set "available" to true as per the updated requirement
+        available: true // Set "available" to true as per the requirement
     };
 
-    // Retrieve the token from local storage
-    const token = localStorage.getItem('token');
-
-    // Send the POST request to the API endpoint with the Authorization header
     fetch('/api/movies/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            // Include the token in the Authorization header
             'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(movieData),
+        body: JSON.stringify(movieData)
     })
         .then(response => response.json())
         .then(data => {
@@ -60,12 +116,19 @@ document.getElementById('addMovieBtn').addEventListener('click', () => {
         });
 });
 
-// Function to add a movie show
-document.getElementById('addMovieShowBtn').addEventListener('click', () => {
+document.getElementById('manageShowsBtn').addEventListener('click', function () {
+    document.getElementById('addShowSection').style.display = 'block';
+});
+
+document.getElementById('addShowBtn').addEventListener('click', function () {
     const roomID = document.getElementById('roomID').value;
     const movieID = document.getElementById('movieID').value;
     const date = document.getElementById('date').value;
     const hour = document.getElementById('hour').value;
+    const token = localStorage.getItem('token');
+
+    // Generate the current timestamp in ISO 8601 format
+    const now = new Date().toISOString();
 
     if (roomID == "" || roomID == null) {
         alert("roomID cannot be empty!");
@@ -92,15 +155,16 @@ document.getElementById('addMovieShowBtn').addEventListener('click', () => {
         movieId: parseInt(movieID),
         date: date,
         hour: hour,
+        dateUpdate: now // Set to current timestamp in ISO 8601 format
     };
 
     fetch('/api/movieShows', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(movieShowData),
+        body: JSON.stringify(showData)
     })
         .then(response => response.json())
         .then(data => {
@@ -115,11 +179,16 @@ document.getElementById('addMovieShowBtn').addEventListener('click', () => {
         });
 });
 
-// Function to add a room
-document.getElementById('addRoomBtn').addEventListener('click', () => {
+document.getElementById('addRoomBtn').addEventListener('click', function () {
+    document.getElementById('addRoomSection').style.display = 'block';
+});
+
+document.getElementById('addRoomForm').addEventListener('submit', function (event) {
+    event.preventDefault();
     const roomNo = document.getElementById('roomNo').value;
     const rows = document.getElementById('rows').value;
     const seatsInRow = document.getElementById('seatsInRow').value;
+    const token = localStorage.getItem('token');
 
     if (roomNo == "" || roomNo == null) {
         alert("roomNo cannot be empty!");
@@ -139,16 +208,16 @@ document.getElementById('addRoomBtn').addEventListener('click', () => {
     const roomData = {
         roomNo: parseInt(roomNo),
         rows: parseInt(rows),
-        seatsInRow: parseInt(seatsInRow),
+        seatsInRow: parseInt(seatsInRow)
     };
 
     fetch('/api/rooms/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(roomData),
+        body: JSON.stringify(roomData)
     })
         .then(response => response.json())
         .then(data => {

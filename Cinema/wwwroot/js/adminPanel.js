@@ -1,5 +1,5 @@
 ﻿// Function to add a movie
-function addMovie() {
+document.getElementById('addMovieBtn').addEventListener('click', () => {
     const title = document.getElementById('title').value;
     const duration = parseInt(document.getElementById('duration').value);
     const genre = document.getElementById('genre').value;
@@ -35,16 +35,21 @@ function addMovie() {
             return response.json()
         })
         .then(data => {
-            console.log('Success:', data);
+            document.getElementById('successMessage').style.display = 'block';
+            alert('Something goes wrong!')
+            setTimeout(() => {
+                console.log(response.status, response);
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
             // Optionally, provide feedback to the user or clear the form
         })
         .catch((error) => {
             console.error('Error:', error);
         });
-}
+});
 
 // Function to add a movie show
-function addMovieShow() {
+document.getElementById('addMovieShowBtn').addEventListener('click', () => {
     const roomID = document.getElementById('roomID').value;
     const movieID = document.getElementById('movieID').value;
     const date = document.getElementById('date').value;
@@ -78,10 +83,10 @@ function addMovieShow() {
         .catch((error) => {
             console.error('Error:', error);
         });
-}
+});
 
 // Function to add a room
-function addRoom() {
+document.getElementById('addRoomBtn').addEventListener('click', () => {
     const roomNo = document.getElementById('roomNo').value;
     const rows = document.getElementById('rows').value;
     const seatsInRow = document.getElementById('seatsInRow').value;
@@ -106,10 +111,11 @@ function addRoom() {
                 console.log(response.status, response);
             }
             return response.json();
-        .then(data => {
-            console.log('Success:', data);
         })
-        .catch((error) => {
-            console.error('Error:', error);
+        .then(data => {
+                console.log('Success:', data);
+            })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
         });
-}

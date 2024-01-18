@@ -1,6 +1,7 @@
-﻿if (localStorage.getItem("IsLoggedIn") != true)
-    window.history.back()
-
+﻿if (localStorage.getItem("isLoggedIn") != "true") {
+    alert("XDXD")
+    window.history.back();
+}
 
 fetch('/api/user', {
     method: 'GET',
@@ -16,8 +17,9 @@ fetch('/api/user', {
         return response.json();
     })
     .then(user => {
-        if (user.role != "Admin" || user.role != "Staff")
-            window.history.back();
+        if (user.role == "Admin" || user.role == "Staff")
+            return true;
+        window.history.back();
         })
 
 

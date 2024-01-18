@@ -74,6 +74,28 @@ function fillTopBar() {
 
         topBar.appendChild(profileButton);
         topBar.appendChild(logOutButton);
+
+        fetch('/api/user', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => {
+                if (response.status != 200)
+                    return false;
+                return response.json()
+            })
+            .then(user => {
+                if (user.role == "Admin" || user.role == "Staff") {
+                    let adminButton = document.createElement('a');
+                    adminButton.href = '/adminPanel.html';
+                    adminButton.textContent = 'AdminPanel';
+
+                    document.getElementById('topBar').appendChild(adminButton);
+                }
+            })
     }
     else {
         let loginButton = document.createElement('a');

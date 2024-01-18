@@ -12,7 +12,6 @@ function addMovie() {
         genre: genre,
         description: description,
         available: true, // Set "available" to true as per the updated requirement
-        dateUpdate: new Date().toISOString()
     };
 
     // Retrieve the token from local storage
@@ -28,7 +27,13 @@ function addMovie() {
         },
         body: JSON.stringify(movieData),
     })
-        .then(response => response.json())
+        .then(response => {
+            if (response.status != 201) {
+                alert('Something goes wrong!')
+                console.log(response.status, response);
+            }
+            return response.json()
+        })
         .then(data => {
             console.log('Success:', data);
             // Optionally, provide feedback to the user or clear the form
@@ -50,7 +55,6 @@ function addMovieShow() {
         movieId: parseInt(movieID),
         date: date,
         hour: hour,
-        dateUpdate: new Date().toISOString()
     };
 
     fetch('/api/movieShows', {
@@ -62,11 +66,9 @@ function addMovieShow() {
         body: JSON.stringify(movieShowData),
     })
         .then(response => {
-            if (response.ok) {
-                document.getElementById('successMessage').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('successMessage').style.display = 'none';
-                }, 3000); // Hide the message after 3 seconds
+            if (response.status != 201) {
+                alert('Something goes wrong!')
+                console.log(response.status, response);
             }
             return response.json();
         })
@@ -88,7 +90,6 @@ function addRoom() {
         roomNo: parseInt(roomNo),
         rows: parseInt(rows),
         seatsInRow: parseInt(seatsInRow),
-        dateUpdate: new Date().toISOString()
     };
 
     fetch('/api/rooms/create', {
@@ -100,14 +101,11 @@ function addRoom() {
         body: JSON.stringify(roomData),
     })
         .then(response => {
-            if (response.ok) {
-                document.getElementById('roomSuccessMessage').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('roomSuccessMessage').style.display = 'none';
-                }, 3000); // Hide the message after 3 seconds
+            if (response.status != 201) {
+                alert('Something goes wrong!')
+                console.log(response.status, response);
             }
             return response.json();
-        })
         .then(data => {
             console.log('Success:', data);
         })

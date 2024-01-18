@@ -1,4 +1,5 @@
 using Cinema.Models;
+using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ namespace Cinema
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            
 
             // Add services to the container.
 
@@ -38,6 +41,7 @@ namespace Cinema
             var app = builder.Build();
 
             app.MapIdentityApi<UsersModel>();
+            app.UseAuthentication();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

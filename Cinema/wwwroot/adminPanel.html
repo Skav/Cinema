@@ -50,10 +50,27 @@
             <label for="movieID">Movie ID:</label>
             <input type="number" id="movieID" name="movieID" required><br><br>
             <label for="date">Date:</label>
-            <input type="datetime-local" id="date" name="date" required><br><br>
+            <input type="date" id="date" name="date" required><br><br>
             <label for="hour">Hour:</label>
-            <input type="time" id="hour" name="hour" required><br><br>
+            <input type="text" id="hour" name="hour" required><br><br>
             <button type="button" id="addMovieShowBtn">Add Movie Show</button>
+        </form>
+        <div id="successMessage" style="display:none;">Successfully added the movie show!</div>
+    </div>
+
+    <div class="form-container">
+        <h2>Add User</h2>
+        <form id="addMovieShowForm">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <label for="date">Role:</label>
+            <select id="role">
+                <option value="Staff">Staff</option>
+                <option value="Admin">Admin</option>
+            </select><br /><br />
+            <button type="button" id="addUserBtn">Add User</button>
         </form>
         <div id="successMessage" style="display:none;">Successfully added the movie show!</div>
     </div>

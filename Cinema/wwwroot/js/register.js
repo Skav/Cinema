@@ -2,16 +2,17 @@
     event.preventDefault();
     const email = document.getElementById('emailRegister').value;
     const password = document.getElementById('passwordRegister').value;
+    const username = document.getElementById('usernameRegister').value;
 
-    fetch('/register', {
+    fetch('/api/user/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: email, password: password }),
+        body: JSON.stringify({ email: email, username: username, password: password }),
     })
         .then(response => {
-            if (response.ok) {
+            if (response.status == 201) {
                 // If the response is ok, display a success message and redirect
                 alert('Account has been created successfully.');
                 window.location.href = '/login.html';

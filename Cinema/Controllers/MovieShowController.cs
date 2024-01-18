@@ -78,13 +78,13 @@ namespace Cinema.Controllers
             if(!await _context.Rooms.Where(x => x.id == request.roomId).AnyAsync())
                 return BadRequest(JsonSerializer.Serialize(new
                 {
-                    Error = "Room with given ID doesn't exists!"
+                    error = "Room with given ID doesn't exists!"
                 }));
 
             if (!await _context.Movies.Where(x => x.id == request.movieId).AnyAsync())
                 return BadRequest(JsonSerializer.Serialize(new
                 {
-                    Error = "Movie with given ID doesn't exists!"
+                    error = "Movie with given ID doesn't exists!"
                 }));
 
             var movieShow = mapper.Map<MovieShowModel>(request);

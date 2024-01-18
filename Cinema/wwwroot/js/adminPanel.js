@@ -5,6 +5,26 @@ document.getElementById('addMovieBtn').addEventListener('click', () => {
     const genre = document.getElementById('genre').value;
     const description = document.getElementById('description').value;
 
+    if (title == "" || title == null) {
+        alert("Title cannot be empty!");
+        return false;
+    }
+
+    if (duration == "" || duration == null) {
+        alert("Duration cannot be empty!");
+        return false;
+    }
+
+    if (genre == "" || genre == null) {
+        alert("Genre cannot be empty!");
+        return false;
+    }
+
+    if (description == "" || description == null) {
+        alert("Description cannot be empty!");
+        return false;
+    }
+
     // Prepare the JSON payload with "available" set to true
     const movieData = {
         title: title,
@@ -27,23 +47,15 @@ document.getElementById('addMovieBtn').addEventListener('click', () => {
         },
         body: JSON.stringify(movieData),
     })
-        .then(response => {
-            if (response.status != 201) {
-                alert('Something goes wrong!')
-                console.log(response.status, response);
-            }
-            return response.json()
-        })
+        .then(response => response.json())
         .then(data => {
-            document.getElementById('successMessage').style.display = 'block';
-            alert('Something goes wrong!')
-            setTimeout(() => {
-                console.log(response.status, response);
-                document.getElementById('successMessage').style.display = 'none';
-            }, 3000);
-            // Optionally, provide feedback to the user or clear the form
+            if (data.error) {
+                alert(`An error occured: ${data.error}`);
+                return false
+            }
+            console.log('Success:', data);
         })
-        .catch((error) => {
+        .catch(error => {
             console.error('Error:', error);
         });
 });
@@ -54,6 +66,26 @@ document.getElementById('addMovieShowBtn').addEventListener('click', () => {
     const movieID = document.getElementById('movieID').value;
     const date = document.getElementById('date').value;
     const hour = document.getElementById('hour').value;
+
+    if (roomID == "" || roomID == null) {
+        alert("roomID cannot be empty!");
+        return false;
+    }
+
+    if (movieID == "" || movieID == null) {
+        alert("movieID cannot be empty!");
+        return false;
+    }
+
+    if (date == "" || date == null) {
+        alert("Date cannot be empty!");
+        return false;
+    }
+
+    if (hour == "" || hour == null) {
+        alert("Hour cannot be empty!");
+        return false;
+    }
 
     const movieShowData = {
         roomId: parseInt(roomID),
@@ -70,17 +102,15 @@ document.getElementById('addMovieShowBtn').addEventListener('click', () => {
         },
         body: JSON.stringify(movieShowData),
     })
-        .then(response => {
-            if (response.status != 201) {
-                alert('Something goes wrong!')
-                console.log(response.status, response);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
+        if (data.error) {
+            alert(`An error occured: ${data.error}`);
+            return false
+        }
+        console.log('Success:', data);
         })
-        .catch((error) => {
+        .catch(error => {
             console.error('Error:', error);
         });
 });
@@ -90,6 +120,21 @@ document.getElementById('addRoomBtn').addEventListener('click', () => {
     const roomNo = document.getElementById('roomNo').value;
     const rows = document.getElementById('rows').value;
     const seatsInRow = document.getElementById('seatsInRow').value;
+
+    if (roomNo == "" || roomNo == null) {
+        alert("roomNo cannot be empty!");
+        return false;
+    }
+
+    if (rows == "" || rows == null) {
+        alert("Rows cannot be empty!");
+        return false;
+    }
+
+    if (seatsInRow == "" || seatsInRow == null) {
+        alert("SeatsInRow cannot be empty!");
+        return false;
+    }
 
     const roomData = {
         roomNo: parseInt(roomNo),
@@ -105,17 +150,15 @@ document.getElementById('addRoomBtn').addEventListener('click', () => {
         },
         body: JSON.stringify(roomData),
     })
-        .then(response => {
-            if (response.status != 201) {
-                alert('Something goes wrong!')
-                console.log(response.status, response);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-                console.log('Success:', data);
-            })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+            if (data.error) {
+                alert(`An error occured: ${data.error}`);
+                return false
+            }
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
         });

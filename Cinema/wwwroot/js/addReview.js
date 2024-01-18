@@ -101,11 +101,11 @@ function addReview() {
             if (response.status == 201) {
                 let success = document.createElement('p');
                 success.className = 'success';
-                success.className = "Added!"
+                success.textContent = "Added!"
 
                 addReviewBox.removeChild(movieContext);
                 addReviewBox.removeChild(rating);
-                addReviewBox.removeChild(addReview.getElementById('submitButton'))
+                addReviewBox.removeChild(document.getElementById('submitButton'))
                 addReviewBox.appendChild(success)
             }
             else {

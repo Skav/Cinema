@@ -36,7 +36,7 @@ if (isLoggedIn == 'true') {
                 localStorage.setItem('tokenExpiration', expirationDate.toISOString()); // Store as ISO string
                 fillTopBar();
                 alert('Token refreshed!');
-                window.location.reload;
+                window.location.reload();
             })
             .catch((error) => {
                 console.error('Error:', error);

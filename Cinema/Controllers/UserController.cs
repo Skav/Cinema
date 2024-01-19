@@ -112,15 +112,13 @@ namespace Cinema.Controllers
                 }));
 
 
-            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            Match match = regex.Match(request.email);
-            if (!match.Success)                
+            if (!checkEmail(request.email))
                 return Conflict(JsonSerializer.Serialize(new
                 {
                     error = "Email address is invalid!"
                 }));
-            
-            
+
+
 
             var user = new UsersModel();
             user.Email = request.email;
@@ -161,6 +159,13 @@ namespace Cinema.Controllers
                     error = "Password is to weak! You need to use 1 digit, 1 special character and 1 capital letter"
                 }));
 
+
+            if (!checkEmail(request.email))
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Email address is invalid!"
+                }));
+
             var user = new UsersModel();
             user.Email = request.email;
             user.UserName = request.username;
@@ -193,6 +198,13 @@ namespace Cinema.Controllers
             return Ok();
         }
 
+        private bool checkEmail(string email)
+        {
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            Match match = regex.Match(email);
+            return match.Success;
+
+        }
     }
 }
  

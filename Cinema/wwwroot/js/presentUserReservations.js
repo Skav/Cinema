@@ -45,6 +45,28 @@
                                         <td>Row: ${reservation.seatRow} <br> Column: ${reservation.seatColumn}</td>
                                         <td>${room.roomNo}</td>
                                         <td>${reservation.status}</td>`;
+
+                                        let actionContainer = document.createElement('td');
+                                        if (reservation.status == "in_progress" && new Date() < new Date(movieShow.date)) {
+                                            actionContainer.value = reservation.id;
+                                            let button = document.createElement('input');
+                                            button.type = "button";
+                                            button.className = 'btn-accept';
+                                            button.value = "Confirm"
+                                            button.addEventListener('click', confirmReservation);
+                                            actionContainer.appendChild(button);
+                                        }
+                                        else if (reservation.status == "Confirmed") {
+                                            actionContainer.value = reservation.id;
+                                            let button = document.createElement('input');
+                                            button.type = "button";
+                                            button.className = 'btn-remove';
+                                            button.value = "Cancel"
+                                            button.addEventListener('click', cancelReservation);
+                                            actionContainer.appendChild(button);
+                                        }
+                                        row.appendChild(actionContainer);
+
                                     })
                             })
                     });
@@ -126,4 +148,54 @@ function removeReview(event) {
             }
         })
     
+}
+
+function confirmReservation(context) {
+    fetch(`/api/reservations/${context.target.parentNode.value}/confirmReservation`, {
+        method: "PUT",
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (response.status == 200) {
+                alert("Reservation confirmed!");
+                window.location.reload();
+            }
+            return response.json();
+        })
+        .then(response => {
+            if (response.error)
+                alert(`Error: ${response.error}`);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Optionally, update the UI to show an error message
+        });
+}
+
+function cancelReservation(context) {
+    fetch(`/api/reservations/${context.target.parentNode.value}/cancelReservation`, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (response.status == 200) {
+                alert("Reservation deleted!");
+                window.location.reload();
+            }
+            return response.json();
+        })
+        .then(response => {
+            if (response.error)
+                alert(`Error: ${response.error}`);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Optionally, update the UI to show an error message
+        });
 }

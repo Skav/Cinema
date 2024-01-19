@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
             rating.id = 'movieRating';
             
 
-            let context = document.createElement('input');
+            let context = document.createElement('textarea');
             context.type = "text";
             context.id = 'movieContext';
             context.maxLength = "255";
@@ -105,8 +105,10 @@ function addReview() {
 
                 addReviewBox.removeChild(movieContext);
                 addReviewBox.removeChild(rating);
-                addReviewBox.removeChild(document.getElementById('submitButton'))
-                addReviewBox.appendChild(success)
+                addReviewBox.removeChild(document.getElementById('submitButton'));
+                addReviewBox.appendChild(success);
+
+                console.log("Added!");
             }
             else {
                 let error = document.createElement('p');

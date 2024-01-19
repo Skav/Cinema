@@ -88,6 +88,10 @@ document.getElementById('roomSeats').addEventListener("click", function (event) 
 
 document.getElementById('btnSubmit').addEventListener('click', function (event) {
     let selectedSeats = document.getElementsByClassName('selected');
+    if (selectedSeats.length == 0) {
+        alert("You need to choose seats!")
+        return false;
+    }
     let seatsToReserve = []
 
     for (let i = 0; i < selectedSeats.length; i++) {
@@ -130,7 +134,6 @@ document.getElementById('btnSubmit').addEventListener('click', function (event) 
                 await reserveSeat(row, seat, movieShowId);
             }
 
-            //alert("Reserved!");
             window.location.href = '/ticketConfirm.html'
         })
         .catch(error => {

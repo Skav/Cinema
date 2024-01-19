@@ -17,6 +17,17 @@
                 <td>${movie.duration}</td>
                 <td>${movie.genre}</td>
                 `;
+
+                let delButtonContainer = document.createElement('td');
+                delButtonContainer.value = movie.id;
+                let delButton = document.createElement('input');
+                delButton.value = "DELETE";
+                delButton.className = "btn-remove";
+                delButton.type = "button";
+                delButton.addEventListener("click", deleteMovie);
+
+                delButtonContainer.appendChild(delButton);
+                row.appendChild(delButtonContainer);
             });
         })
         .catch(error => {
@@ -41,6 +52,17 @@
                 <td>${room.rows}</td>
                 <td>${room.seatsInRow}</td>
             `;
+
+                let delButtonContainer = document.createElement('td');
+                delButtonContainer.value = room.id;
+                let delButton = document.createElement('input');
+                delButton.value = "DELETE";
+                delButton.className = "btn-remove";
+                delButton.type = "button";
+                delButton.addEventListener("click", deleteRoom);
+
+                delButtonContainer.appendChild(delButton);
+                row.appendChild(delButtonContainer);
             });
         })
         .catch(error => {
@@ -66,6 +88,70 @@
                 <td>${movieShow.date}</td>
                 <td>${movieShow.hour}</td>
             `;
+
+                let delButtonContainer = document.createElement('td');
+                delButtonContainer.value = movieShow.id;
+                let delButton = document.createElement('input');
+                delButton.value = "DELETE";
+                delButton.className = "btn-remove";
+                delButton.type = "button";
+                delButton.addEventListener("click", deleteMovieShow);
+
+                delButtonContainer.appendChild(delButton);
+                row.appendChild(delButtonContainer);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+    fetch('/api/user/all', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+        .then(response => response.json())
+        .then(users => {
+            const usersListTableBody = document.querySelector('#usersListTable tbody');
+            fetch('/api/user', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then(response => {
+                    if (response.status != 200) {
+                        console.log("An error occured")
+                    }
+                    return response.json();
+                })
+                .then(userInfo => {
+                    users.forEach(user => {
+                        const row = usersListTableBody.insertRow();
+                        row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${user.role}</td>
+                        `;
+
+                        if (userInfo.username != user.username && user.role != "Admin") {
+                            let delButtonContainer = document.createElement('td');
+                            delButtonContainer.value = user.id;
+                            let delButton = document.createElement('input');
+                            delButton.value = "DELETE";
+                            delButton.className = "btn-remove";
+                            delButton.type = "button";
+                            delButton.addEventListener("click", deleteUser);
+
+                            delButtonContainer.appendChild(delButton);
+                            row.appendChild(delButtonContainer);
+                        }
+                    });
+                
             });
         })
         .catch(error => {
@@ -73,13 +159,115 @@
         });
 });
 
+function deleteUser(context) {
 
-function showMovieShows(movieId) {
-    // Implement the logic to show movie shows for the given movieId
-    console.log('Show shows for movie ID:', movieId);
-    // You might want to navigate to another page or open a modal with the movie shows
+    fetch()
+    fetch(`/api/user/${context.target.parentNode.value}/delete`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+        .then(response => {
+            if (response.status == 200) {
+                alert("Success!")
+                window.location.reload();
+            }
+            else if (response.status == 409) {
+                return response.json()
+            }
+            else {
+                alert("Something goes wrong  - check if room isn't added to any movieShow")
+            }
+        })
+        .then(data => {
+            if (data.error != null) {
+                console.log(`Error: ${data.error}`)
+            }
+        })
 }
 
+function deleteMovieShow(context) {
+    fetch(`/api/movieShows/${context.target.parentNode.value}/delete`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+        .then(response => {
+            if (response.status == 200) {
+                alert("Success!")
+                window.location.reload();
+            }
+            else if (response.status == 409) {
+                return response.json()
+            }
+            else {
+                alert("Something goes wrong")
+            }
+        })
+        .then(data => {
+            if (data.error != null) {
+                console.log(`Error: ${data.error}`)
+            }
+        })
+}
+
+function deleteMovie(context) {
+    fetch(`/api/movies/${context.target.parentNode.value}/delete`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+        .then(response => {
+            if (response.status == 200) {
+                alert("Success!")
+                window.location.reload();
+            }
+            else if (response.status == 409) {
+                return response.json()
+            }
+            else {
+                alert("Something goes wrong - check if movie isn't added to any movieShow")
+            }
+        })
+        .then(data => {
+            if (data.error != null) {
+                console.log(`Error: ${data.error}`)
+            }
+        })
+}
+
+function deleteRoom(context) {
+    fetch(`/api/rooms/${context.target.parentNode.value}/delete`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+        .then(response => {
+            if (response.status == 200) {
+                alert("Success!")
+                window.location.reload();
+            }
+            else if (response.status == 409) {
+                return response.json()
+            }
+            else {
+                alert("Something goes wrong  - check if room isn't added to any movieShow")
+            }
+        })
+        .then(data => {
+            if (data.error != null) {
+                console.log(`Error: ${data.error}`)
+            }
+        })
+}
 document.getElementById('manageMoviesBtn').addEventListener('click', function () {
     let div = document.getElementById('addMovieSection');
 
@@ -279,4 +467,69 @@ document.getElementById('addRoomForm').addEventListener('submit', function (even
         .catch(error => {
             console.error('Error:', error);
         });
+});
+
+document.getElementById('addUserBtn').addEventListener('click', function () {
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    console.log(email);
+    const password = document.getElementById('password').value;
+    const role = document.getElementById('role').value;
+    const token = localStorage.getItem('token');
+
+    if (username == "" || username == null) {
+        alert("Username cannot be empty!");
+        return false;
+    }
+
+    if (email == "" || email == null) {
+        alert("Email cannot be empty!");
+        return false;
+    }
+
+    if (password == "" || password == null) {
+        alert("Password cannot be empty!");
+        return false;
+    }
+
+    if (role == "" || role == null) {
+        alert("Role cannot be empty!");
+        return false;
+    }
+
+    // Prepare the JSON payload with "available" set to true
+    const userData = {
+        username: username,
+        email: email,
+        password: password,
+        role: role
+    };
+
+    fetch('/api/user/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(userData)
+    })
+        .then(response => {
+            if (response.status == 201) {
+                alert("Success!")
+                window.location.reload();
+            }
+            else if (response.status == 400) {
+                alert("Validation error!")
+            }
+            return response.json()
+        })
+        .then(data => {
+            if (data.error) {
+                alert(`An error occured: ${data.error}`);
+                return false
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
+});

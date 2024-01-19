@@ -11,8 +11,13 @@
         body: JSON.stringify({ email: email, password: password }),
     })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            if (response.status == 401) {
+                alert("Wrong username or password!");
+                return false;
+            }
+            else if (response.status != 200) {
+                alert("Something goes wrong!")
+                return false;
             }
             return response.json();
         })

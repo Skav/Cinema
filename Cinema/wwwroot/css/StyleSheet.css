@@ -63,12 +63,12 @@ a:visited {
 }
 
 .btn-remove {
-    padding: 10px 15px;
+    padding: 5px 10px;
     background-color: #d9534f;
     color: white;
     border: none;
     border-radius: 6px;
-    font-size: 20px;
+    font-size: 15px;
     cursor: pointer;
     text-align: center;
 }
@@ -78,7 +78,7 @@ a:visited {
 }
 
 .btn-accept {
-    padding: 10px 15px;
+    padding: 5px 10px;
     background-color: #5cb85c;
     color: white;
     border: none;

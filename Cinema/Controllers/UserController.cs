@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Specialized;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Cinema.Controllers
 {
@@ -50,6 +52,40 @@ namespace Cinema.Controllers
             }));
         }
 
+        [HttpGet]
+        [Route("all")]
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> getAllUserInfo()
+        {
+
+            var users = await _context.Users.ToArrayAsync();
+
+            if (users == null)
+                return NotFound();
+
+            var usersList = new List<userTransportDTO>{ };
+
+            foreach (var userData in users)
+            {
+                var userModel = new UsersModel();
+                var userDTO = new userTransportDTO();
+                userModel.UserName = userData.UserName;
+                userModel.Email = userData.Email;
+                userModel.Id = userData.Id;
+
+                var role = await _usersManager.GetRolesAsync(userModel);
+
+                userDTO.email = userModel.Email;
+                userDTO.username = userModel.UserName;
+                userDTO.id = userModel.Id;
+                userDTO.role = role[0];
+
+                usersList.Add(userDTO);
+            }
+
+            return Ok(usersList);
+        }
+
 
         [HttpPost]
         [Authorize(Roles = "Admin,Staff")]
@@ -69,11 +105,22 @@ namespace Cinema.Controllers
                 }));
 
 
-            if (request.role != "Admin" && request.role != "Staff")
+            if (request.role != "Admin" && request.role != "Staff" && request.role != "Customer")
                 return BadRequest(JsonSerializer.Serialize(new
                 {
                     error = "Wrong role"
                 }));
+
+
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            Match match = regex.Match(request.email);
+            if (!match.Success)                
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Email address is invalid!"
+                }));
+            
+            
 
             var user = new UsersModel();
             user.Email = request.email;
@@ -97,13 +144,21 @@ namespace Cinema.Controllers
             if (await _usersManager.FindByEmailAsync(request.email) != null)
                 return Conflict(JsonSerializer.Serialize(new
                 {
-                    error = "User exists!"
+                    error = "User with given email exists!"
                 }));
 
             if (await _context.Users.Where(x => x.UserName == request.username).FirstOrDefaultAsync() != null)
                 return Conflict(JsonSerializer.Serialize(new
                 {
-                    error = "User exists!"
+                    error = "User with given username exists!"
+                }));
+
+            var validator = new PasswordValidator<UsersModel>();
+            var passwordResult = await validator.ValidateAsync(_usersManager, null, request.password);
+            if (!passwordResult.Succeeded)
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Password is to weak! You need to use 1 digit, 1 special character and 1 capital letter"
                 }));
 
             var user = new UsersModel();
@@ -111,6 +166,7 @@ namespace Cinema.Controllers
             user.UserName = request.username;
             user.EmailConfirmed = true;
             await _usersManager.CreateAsync(user, request.password);
+            _context.SaveChanges();
             await _usersManager.AddToRoleAsync(user, "Customer");
             _context.SaveChanges();
 
@@ -121,8 +177,22 @@ namespace Cinema.Controllers
             }));
         }
 
+        [HttpDelete]
+        [Route("{userId}/delete")]
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> removeUser(string userId)
+        {
+            var user = await _context.Users.Where(x => x.Id == userId).FirstOrDefaultAsync();
+            if (user == null)
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Given user do not exists!"
+                }));
+
+            await _usersManager.DeleteAsync(user);
+            return Ok();
+        }
+
     }
-
-
 }
  

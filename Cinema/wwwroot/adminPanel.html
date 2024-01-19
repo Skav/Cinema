@@ -72,12 +72,15 @@
     <div id="addUserSection" class="form-container hidden">
         <h2>Add User</h2>
         <form id="addMovieShowForm">
+            <label for="email">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
             <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required><br><br>
+            <input type="email" id="email" name="email" required><br><br>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required><br><br>
             <label for="date">Role:</label>
             <select id="role">
+                <option value="Customer">Customer</option>
                 <option value="Staff">Staff</option>
                 <option value="Admin">Admin</option>
             </select><br /><br />
@@ -97,6 +100,7 @@
                     <th>Room Number</th>
                     <th>Rows</th>
                     <th>Seats in Row</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -116,6 +120,7 @@
                     <th>Title</th>
                     <th>Duration</th>
                     <th>Genre</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -136,6 +141,25 @@
                     <th>Movie ID</th>
                     <th>Date</th>
                     <th>Hour</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Movie show rows will be added here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <h2>USERS</h2>
+    <div id="usersListContainer">
+        <table id="usersListTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>

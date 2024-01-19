@@ -13,18 +13,18 @@
     })
         .then(response => {
             if (response.status == 201) {
-                // If the response is ok, display a success message and redirect
                 alert('Account has been created successfully.');
                 window.location.href = '/login.html';
-            } else {
-                // If the response is not ok, parse the JSON to get the error message
-                return response.json().then(errorData => {
-                    // Extract the message after "0:"
-                    const errorMessage = errorData.errors[Object.keys(errorData.errors)[0]][0];
-                    // Throw an error with the message from the server response
-                    throw new Error(errorMessage || 'An error occurred');
-                });
             }
+            else if (response.status == 409) {
+                return response.json();
+            }
+            else {
+                alert("Something goes wrong");
+            }
+        })
+        .then(data => {
+            alert(`Error: ${data.error}`);
         })
         .catch((error) => {
             console.error('Error:', error);

@@ -42,6 +42,7 @@
                 let reserveButton = document.createElement('a');
                 reserveButton.classList.add('reserveButton');
                 reserveButton.href = `/reserve.html?movieShowId=${movieShow.id}`;
+                reserveButton.className = "movieLink"
                 reserveButton.textContent = "Reserve";
 
                 row.insertCell().textContent = date.toDateString();

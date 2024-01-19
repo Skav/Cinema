@@ -15,6 +15,7 @@
                 let link = document.createElement('a');
                 link.href = `/movie.html?movieId=${movie.id}`;
                 link.textContent = movie.title;
+                link.className = "movieLink"
                 row.insertCell().appendChild(link);
                 row.insertCell().textContent = movie.duration;
                 row.insertCell().textContent = movie.genre;

@@ -17,6 +17,10 @@ a:visited {
     text-decoration: none;
 }
 
+.movieLink {
+    text-decoration: underline;
+}
+
 #topBar > a {
     padding: 10px;
 }

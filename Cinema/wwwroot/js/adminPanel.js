@@ -138,8 +138,8 @@
                         <td>${user.role}</td>
                         `;
 
-                        if (userInfo.username != user.username && user.role != "Admin") {
-                            let delButtonContainer = document.createElement('td');
+                        let delButtonContainer = document.createElement('td');
+                        if (userInfo.username != user.username && user.role != "Admin") {                       
                             delButtonContainer.value = user.id;
                             let delButton = document.createElement('input');
                             delButton.value = "DELETE";
@@ -148,8 +148,8 @@
                             delButton.addEventListener("click", deleteUser);
 
                             delButtonContainer.appendChild(delButton);
-                            row.appendChild(delButtonContainer);
                         }
+                        row.appendChild(delButtonContainer);
                     });
                 
             });

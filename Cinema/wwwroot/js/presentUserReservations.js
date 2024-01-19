@@ -32,7 +32,7 @@
                 fetch(`/api/movieShows/${reservation.movieShowId}`)
                     .then(response => response.json())
                     .then(movieShow => {
-                        fetch(`/api/movies/${movieShow.id}`)
+                        fetch(`/api/movies/${movieShow.movieId}`)
                             .then(response => response.json())
                             .then(movie => {
                                 fetch(`/api/rooms/${movieShow.roomId}`).then(response => response.json())

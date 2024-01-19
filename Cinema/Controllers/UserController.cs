@@ -24,7 +24,8 @@ namespace Cinema.Controllers
         [Authorize]
         public async Task<IActionResult> getUserInfo()
         {
-            string userRole;
+
+            var userRole = User.FindFirst(ClaimTypes.Role).Value;
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             var query = from AspNetUsers in _context.Users
@@ -39,27 +40,7 @@ namespace Cinema.Controllers
 
             if (userData == null)
                 return NotFound();
-
-
-            try
-            {
-                userRole = User.FindFirst(ClaimTypes.Role).Value;
-            }
-            catch (NullReferenceException)
-            {
-                userRole = "Customer";
-                var userDb = await _context.Users.Where(x => x.Id == userId).FirstOrDefaultAsync();
-                var user = await _usersManager.FindByIdAsync(userDb.Id);
-
-
-                if (user == null) 
-                    return Conflict();
-
-                await _usersManager.AddToRoleAsync(user, userRole);
-                _context.SaveChanges();
-            }
-
-           
+            
 
             return Ok(JsonSerializer.Serialize(new
             {

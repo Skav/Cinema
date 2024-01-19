@@ -31,7 +31,13 @@ function showMovieShows(movieId) {
 }
 
 document.getElementById('manageMoviesBtn').addEventListener('click', function () {
-    document.getElementById('addMovieSection').style.display = 'block';
+    let div = document.getElementById('addMovieSection');
+
+    if (div.classList.length == 2)
+        div.classList.remove('hidden');
+    else
+        div.classList.add('hidden');
+        
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -109,7 +115,8 @@ document.getElementById('addMovieBtn').addEventListener('click', function () {
                 alert(`An error occured: ${data.error}`);
                 return false
             }
-            console.log('Success:', data);
+            alert('Success');
+            window.location.reload();
         })
         .catch(error => {
             console.error('Error:', error);
@@ -117,18 +124,20 @@ document.getElementById('addMovieBtn').addEventListener('click', function () {
 });
 
 document.getElementById('manageShowsBtn').addEventListener('click', function () {
-    document.getElementById('addShowSection').style.display = 'block';
+    let div = document.getElementById('addShowSection');
+
+    if (div.classList.length == 2)
+        div.classList.remove('hidden');
+    else
+        div.classList.add('hidden');
 });
 
-document.getElementById('addShowBtn').addEventListener('click', function () {
+document.getElementById('addMovieShowBtn').addEventListener('click', function () {
     const roomID = document.getElementById('roomID').value;
     const movieID = document.getElementById('movieID').value;
     const date = document.getElementById('date').value;
     const hour = document.getElementById('hour').value;
     const token = localStorage.getItem('token');
-
-    // Generate the current timestamp in ISO 8601 format
-    const now = new Date().toISOString();
 
     if (roomID == "" || roomID == null) {
         alert("roomID cannot be empty!");
@@ -155,7 +164,6 @@ document.getElementById('addShowBtn').addEventListener('click', function () {
         movieId: parseInt(movieID),
         date: date,
         hour: hour,
-        dateUpdate: now // Set to current timestamp in ISO 8601 format
     };
 
     fetch('/api/movieShows', {
@@ -164,7 +172,7 @@ document.getElementById('addShowBtn').addEventListener('click', function () {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(showData)
+        body: JSON.stringify(movieShowData)
     })
         .then(response => response.json())
         .then(data => {
@@ -172,7 +180,8 @@ document.getElementById('addShowBtn').addEventListener('click', function () {
             alert(`An error occured: ${data.error}`);
             return false
         }
-        console.log('Success:', data);
+            alert('Success');
+            window.location.reload();
         })
         .catch(error => {
             console.error('Error:', error);
@@ -180,7 +189,12 @@ document.getElementById('addShowBtn').addEventListener('click', function () {
 });
 
 document.getElementById('addRoomBtn').addEventListener('click', function () {
-    document.getElementById('addRoomSection').style.display = 'block';
+    let div = document.getElementById('addRoomSection');
+
+    if (div.classList.length == 2)
+        div.classList.remove('hidden');
+    else
+        div.classList.add('hidden');
 });
 
 document.getElementById('addRoomForm').addEventListener('submit', function (event) {
@@ -225,7 +239,8 @@ document.getElementById('addRoomForm').addEventListener('submit', function (even
                 alert(`An error occured: ${data.error}`);
                 return false
             }
-            console.log('Success:', data);
+            alert('Success');
+            window.location.reload();
         })
         .catch(error => {
             console.error('Error:', error);

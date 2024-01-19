@@ -213,6 +213,10 @@ a:visited {
     color: green;
 }
 
+.form-container.hidden {
+    display: none !important;
+}
+
 .reservationMenu {
     margin-top: auto;
     margin: auto;

@@ -92,6 +92,19 @@ namespace Cinema.Controllers
             request.date = request.date.ToUniversalTime();
             movieShow.date = request.date;
             movieShow.dateAdded = DateTime.UtcNow;
+
+            if (await _context.MovieShow
+                .Where(x => x.movieId == request.movieId)
+                .Where(x => x.roomId == request.roomId)
+                .Where(x => x.date == request.date)
+                .Where(x => x.hour == request.hour)
+                .AnyAsync())
+                return BadRequest(JsonSerializer.Serialize(new
+                {
+                    error = "Movie show with given data already exists!"
+                }));
+
+           
             
             await _context.MovieShow.AddAsync(movieShow);
             await _context.SaveChangesAsync();

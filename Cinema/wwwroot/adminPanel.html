@@ -67,6 +67,25 @@
         <br><br>
     </div>
 
+    <button type="button" id="manageUserBtn">ADD USER</button>
+
+    <div id="addUserSection" class="form-container hidden">
+        <h2>Add User</h2>
+        <form id="addMovieShowForm">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <label for="date">Role:</label>
+            <select id="role">
+                <option value="Staff">Staff</option>
+                <option value="Admin">Admin</option>
+            </select><br /><br />
+            <button type="button" id="addUserBtn">Add User</button>
+        </form>
+        <div id="successMessage" style="display:none;">Successfully added the movie show!</div>
+    </div>
+
     <br /><br />
 
     <h2>ROOMS</h2>
@@ -123,23 +142,6 @@
                 <!-- Movie show rows will be added here by JavaScript -->
             </tbody>
         </table>
-    </div>
-
-    <div class="form-container">
-        <h2>Add User</h2>
-        <form id="addMovieShowForm">
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required><br><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br><br>
-            <label for="date">Role:</label>
-            <select id="role">
-                <option value="Staff">Staff</option>
-                <option value="Admin">Admin</option>
-            </select><br /><br />
-            <button type="button" id="addUserBtn">Add User</button>
-        </form>
-        <div id="successMessage" style="display:none;">Successfully added the movie show!</div>
     </div>
 
     <script src="js/adminPanel.js"></script>

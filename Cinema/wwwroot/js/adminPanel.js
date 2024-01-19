@@ -22,25 +22,7 @@
         .catch(error => {
             console.error('Error:', error);
         });
-});
 
-function showMovieShows(movieId) {
-    // Implement the logic to show movie shows for the given movieId
-    console.log('Show shows for movie ID:', movieId);
-    // You might want to navigate to another page or open a modal with the movie shows
-}
-
-document.getElementById('manageMoviesBtn').addEventListener('click', function () {
-    let div = document.getElementById('addMovieSection');
-
-    if (div.classList.length == 2)
-        div.classList.remove('hidden');
-    else
-        div.classList.add('hidden');
-        
-});
-
-document.addEventListener('DOMContentLoaded', function () {
     fetch('/api/rooms', {
         method: 'GET',
         headers: {
@@ -64,7 +46,77 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => {
             console.error('Error:', error);
         });
+
+    fetch('/api/movieShows/all', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+        .then(response => response.json())
+        .then(movieShows => {
+            const roomListTableBody = document.querySelector('#movieShowsListTable tbody');
+            movieShows.forEach(movieShow => {
+                const row = roomListTableBody.insertRow();
+                row.innerHTML = `
+                <td>${movieShow.id}</td>
+                <td>${movieShow.roomId}</td>
+                <td>${movieShow.movieId}</td>
+                <td>${movieShow.date}</td>
+                <td>${movieShow.hour}</td>
+            `;
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 });
+
+
+function showMovieShows(movieId) {
+    // Implement the logic to show movie shows for the given movieId
+    console.log('Show shows for movie ID:', movieId);
+    // You might want to navigate to another page or open a modal with the movie shows
+}
+
+document.getElementById('manageMoviesBtn').addEventListener('click', function () {
+    let div = document.getElementById('addMovieSection');
+
+    if (div.classList.length == 2)
+        div.classList.remove('hidden');
+    else
+        div.classList.add('hidden');
+        
+});
+
+document.getElementById('manageShowsBtn').addEventListener('click', function () {
+    let div = document.getElementById('addShowSection');
+
+    if (div.classList.length == 2)
+        div.classList.remove('hidden');
+    else
+        div.classList.add('hidden');
+});
+
+document.getElementById('manageUserBtn').addEventListener('click', function () {
+    let div = document.getElementById('addUserSection');
+
+    if (div.classList.length == 2)
+        div.classList.remove('hidden');
+    else
+        div.classList.add('hidden');
+});
+
+document.getElementById('addRoomBtn').addEventListener('click', function () {
+    let div = document.getElementById('addRoomSection');
+
+    if (div.classList.length == 2)
+        div.classList.remove('hidden');
+    else
+        div.classList.add('hidden');
+});
+
 document.getElementById('addMovieBtn').addEventListener('click', function () {
     const title = document.getElementById('title').value;
     const duration = parseInt(document.getElementById('duration').value);
@@ -123,15 +175,6 @@ document.getElementById('addMovieBtn').addEventListener('click', function () {
         });
 });
 
-document.getElementById('manageShowsBtn').addEventListener('click', function () {
-    let div = document.getElementById('addShowSection');
-
-    if (div.classList.length == 2)
-        div.classList.remove('hidden');
-    else
-        div.classList.add('hidden');
-});
-
 document.getElementById('addMovieShowBtn').addEventListener('click', function () {
     const roomID = document.getElementById('roomID').value;
     const movieID = document.getElementById('movieID').value;
@@ -186,15 +229,6 @@ document.getElementById('addMovieShowBtn').addEventListener('click', function ()
         .catch(error => {
             console.error('Error:', error);
         });
-});
-
-document.getElementById('addRoomBtn').addEventListener('click', function () {
-    let div = document.getElementById('addRoomSection');
-
-    if (div.classList.length == 2)
-        div.classList.remove('hidden');
-    else
-        div.classList.add('hidden');
 });
 
 document.getElementById('addRoomForm').addEventListener('submit', function (event) {

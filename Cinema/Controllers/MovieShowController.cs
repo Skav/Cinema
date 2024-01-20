@@ -1,5 +1,6 @@
 ﻿using Cinema.DTO;
 using Cinema.Models;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +14,6 @@ namespace Cinema.Controllers
     [ApiController]
     public class MovieShowController : BaseController
     {
-        private TimeZoneInfo polandTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-        //private TimeZoneInfo polandTime = TimeZoneInfo.FindSystemTimeZoneById("Europe/Warsaw"); -- unix
         public MovieShowController(AppDbContext context) : base(context) { }
 
         [HttpGet]
@@ -44,9 +43,6 @@ namespace Cinema.Controllers
         [Route("movie/{movieId:int}")]
         public async Task<IActionResult> getMovieShows(int movieId)
         {
-            if (movieId == 0) 
-                return BadRequest();
-
             var moviesShow = await _context.MovieShow.Where(x => x.movieId == movieId).Where(x => x.date >= DateTime.UtcNow).ToListAsync();
 
             if (moviesShow == null || moviesShow.Count() == 0)
@@ -72,24 +68,31 @@ namespace Cinema.Controllers
         [Authorize(Roles = ("Admin,Staff"))]
         public async Task<IActionResult> addMovieShow([FromBody] MovieShowDTO request)
         {
-            if (request == null || request.roomId == null || request.movieId == null || request.date == null || request.hour == null)
-                return BadRequest();
-
             if(!await _context.Rooms.Where(x => x.id == request.roomId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
                     error = "Room with given ID doesn't exists!"
                 }));
 
             if (!await _context.Movies.Where(x => x.id == request.movieId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
                     error = "Movie with given ID doesn't exists!"
                 }));
 
             var movieShow = mapper.Map<MovieShowModel>(request);
-            request.date = DateTime.SpecifyKind(request.date, DateTimeKind.Local);
+            request.date = DateTime.SpecifyKind(request.date, DateTimeKind.Utc);
             request.date = request.date.ToUniversalTime();
+
+            var movieShowDate = request.date.AtMidnight();
+            var now = DateTime.UtcNow.AtMidnight();
+
+            if (movieShowDate < now)
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Date must be higher or equals today's date"
+                }));
+
             movieShow.date = request.date;
             movieShow.dateAdded = DateTime.UtcNow;
 
@@ -99,7 +102,7 @@ namespace Cinema.Controllers
                 .Where(x => x.date == request.date)
                 .Where(x => x.hour == request.hour)
                 .AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
                     error = "Movie show with given data already exists!"
                 }));
@@ -117,28 +120,26 @@ namespace Cinema.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> editMovieShow(int movieShowId, [FromBody] MovieShowDTO request)
         {
-            if (movieShowId == null)
-                return BadRequest();
-
             if (request.roomId != null && !await _context.Rooms.Where(x => x.id == request.roomId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "Room with given ID doesn't exists!"
+                    error = "Room with given ID doesn't exists!"
                 }));
 
             if (request.movieId != null && !await _context.Movies.Where(x => x.id == request.movieId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "Movie with given ID doesn't exists!"
+                    error = "Movie with given ID doesn't exists!"
                 }));
 
             var movieShow = _context.MovieShow.FirstOrDefault(x => x.id == movieShowId);
 
             if(movieShow == null)
-                return NotFound(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "Movie with given id not exists!"
+                    error = "Movie with given id not exists!"
                 }));
+
 
             request.date = DateTime.SpecifyKind(request.date, DateTimeKind.Local);
             request.date = request.date.ToUniversalTime();
@@ -154,9 +155,6 @@ namespace Cinema.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> deleteMovieShow(int movieShowId)
         {
-            if (movieShowId == 0)
-                return BadRequest();
-
             if (!await _context.MovieShow.AnyAsync(x => x.id == movieShowId))
             {
                 return Conflict(JsonSerializer.Serialize(new
@@ -173,9 +171,6 @@ namespace Cinema.Controllers
         [Route("{movieShowId:int}/getSeats")]
         public async Task<IActionResult> getSeats(int movieShowId)
         {
-            if (movieShowId == null)
-                return BadRequest();
-
             var query = from movieShow in _context.MovieShow
                         join room in _context.Rooms on movieShow.roomId equals room.id
                         where movieShow.id == movieShowId
@@ -193,7 +188,10 @@ namespace Cinema.Controllers
             var movieShowResponse = await query.FirstOrDefaultAsync();
 
             if (movieShowResponse == null)
-                return NotFound();
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Movie show doesnt exists!"
+                }));
 
             var reservedSeatsQuery = await _context.Reservations
                 .Where(x => x.movieShowId == movieShowId)

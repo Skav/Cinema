@@ -171,33 +171,33 @@ namespace Cinema.Controllers
                 return Unauthorized();
 
             if (request.content == null)
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "You need to add content!"
+                    error = "You need to add content!"
                 }));
 
             if (request.rating == null || request.rating < 0 || request.rating > 10)
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "Wron rating value"
+                    error = "Wron rating value"
                 }));
 
             if (!await _context.Users.Where(x => x.Id == request.userId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "User with given ID doesn't exists!"
+                    error = "User with given ID doesn't exists!"
                 }));
 
             if (!await _context.Movies.Where(x => x.id == request.movieId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "Movie with given ID doesn't exists!"
+                    error = "Movie with given ID doesn't exists!"
                 }));
 
             if (await _context.Reviews.Where(x => x.userId == request.userId).Where(x => x.movieId == request.movieId).AnyAsync())
                 return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "User already added review to this movie"
+                    error = "User already added review to this movie"
                 }));
 
             var review = mapper.Map<ReviewsModel>(request);
@@ -221,22 +221,25 @@ namespace Cinema.Controllers
 
 
             if (!await _context.Users.Where(x => x.Id == request.userId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "User with given ID doesn't exists!"
+                    error = "User with given ID doesn't exists!"
                 }));
 
             var dbObject = await _context.Reviews.Where(x => x.id == reviewId).FirstOrDefaultAsync();
 
             if (dbObject == null)
-                return NotFound();
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Review doesn't exists!"
+                }));
 
             request.movieId = dbObject.movieId;
 
             _context.Entry(dbObject).CurrentValues.SetValues(request);
             await _context.SaveChangesAsync();
 
-            return Accepted(dbObject);
+            return Ok(dbObject);
         }
 
         [HttpDelete]
@@ -251,20 +254,22 @@ namespace Cinema.Controllers
 
 
             if (!await _context.Users.Where(x => x.Id == userId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "User with given ID doesn't exists!"
+                    error = "User with given ID doesn't exists!"
                 }));
 
             var review = await _context.Reviews.Where(x => x.id == reviewId).FirstOrDefaultAsync();
 
             if (reviewId == null)
-                return NotFound(nameof(reviewId));
+                return Conflict(JsonSerializer.Serialize(new {
+                    error = "Review doesn't exists!"
+                }));
 
             if (review.userId != userId)
                 return Unauthorized(JsonSerializer.Serialize(new
                 {
-                    Error = "You are not authorized to delete this review"
+                    error = "You are not authorized to delete this review"
                 }));
 
 
@@ -282,7 +287,9 @@ namespace Cinema.Controllers
             var review = await _context.Reviews.Where(x => x.id == reviewId).FirstOrDefaultAsync();
 
             if (reviewId == null)
-                return NotFound(nameof(reviewId));
+                return Conflict(JsonSerializer.Serialize(new {
+                    error = "Review doesn't exists!"
+                }));
 
             await _context.Reviews.Where(x => x.id == reviewId).ExecuteDeleteAsync();
 

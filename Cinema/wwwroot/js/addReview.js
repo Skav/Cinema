@@ -65,9 +65,6 @@ function addReview() {
         addReviewBox.removeChild(item);
     });
 
-    
-
-    console.log(rating.value);
 
     if (rating.value > 10 || rating.value < 0 || rating.value == null || rating.value == "") {
         let error = document.createElement('p');
@@ -108,13 +105,14 @@ function addReview() {
                 addReviewBox.removeChild(document.getElementById('submitButton'));
                 addReviewBox.appendChild(success);
 
-                console.log("Added!");
+                alert("Added!");
+                window.location.reload();
             }
-            else {
-                let error = document.createElement('p');
-                error.className = 'error';
-                error.textContent = `An error occured ${response.statusText}`;
-                addReviewBox.appendChild(error);
+            return response.json();
+        })
+        .then(response => {
+            if (response.error) {
+                alert(`Error: ${response.error}`)
             }
         })
 }

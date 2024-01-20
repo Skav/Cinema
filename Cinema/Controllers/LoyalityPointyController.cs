@@ -45,13 +45,13 @@ namespace Cinema.Controllers
             if (request.userId == null)
                 return BadRequest(JsonSerializer.Serialize(new
                 {
-                    Error = "You need to specify userId!"
+                    error = "You need to specify userId!"
                 }));
 
             if (!await _context.Users.Where(x => x.Id == request.userId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "User with given ID doesn't exists!"
+                    error = "User with given ID doesn't exists!"
                 }));
 
             var dbObject = await _context.LoyalityPoints.FirstOrDefaultAsync(x => x.userId == request.userId);
@@ -77,7 +77,10 @@ namespace Cinema.Controllers
         public async Task<IActionResult> deleteUserPoints(string userId)
         {
             if (string.IsNullOrEmpty(userId))
-                return BadRequest();
+                return BadRequest(JsonSerializer.Serialize(new
+                {
+                    error = "You need to userId!"
+                }));
 
 
             if (!await _context.LoyalityPoints.AnyAsync(x => x.userId == userId))

@@ -51,16 +51,13 @@ namespace Cinema.Controllers
             if (request.userId == null)
                 return BadRequest(JsonSerializer.Serialize(new
                 {
-                    Error = "You need to specify userId!"
+                    error = "You need to specify userId!"
                 }));
 
-            if (request == null || request.discount == null || request.discountType == null || request.userId == null)
-                return BadRequest();
-
             if (!await _context.Users.Where(x => x.Id == request.userId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "User with given ID doesn't exists!"
+                    error = "User with given ID doesn't exists!"
                 }));
 
 
@@ -81,12 +78,15 @@ namespace Cinema.Controllers
         public async Task<IActionResult> updateCoupon(int couponId, [FromBody] CouponsDTO request)
         {
             if (request == null || couponId == null)
-                return BadRequest();
+                return BadRequest(JsonSerializer.Serialize(new
+                {
+                    error = "You need to provide coupon id!"
+                }));
 
             if (request.userId != null && !await _context.Users.Where(x => x.Id == request.userId).AnyAsync())
                 return BadRequest(JsonSerializer.Serialize(new
                 {
-                    Error = "User with given ID doesn't exists!"
+                    error = "User with given ID doesn't exists!"
                 }));
 
             var dbObject = await _context.Coupons.Where(x => x.id == couponId).FirstOrDefaultAsync();
@@ -106,12 +106,18 @@ namespace Cinema.Controllers
         public async Task<IActionResult> deleteCoupon(int couponId, bool forceDelete = false)
         {
             if(couponId == null)
-                return BadRequest();
+                return BadRequest(JsonSerializer.Serialize(new
+                {
+                    error = "You need to provide coupon id!"
+                }));
 
             var coupon = await _context.Coupons.Where(x => x.id == couponId).FirstOrDefaultAsync();
 
             if (coupon == null)
-                return NotFound(nameof(coupon));
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Coupon doesnt exists!"
+                }));
 
             if (forceDelete)
                 await _context.Coupons.Where(x => x.id == couponId).ExecuteDeleteAsync();

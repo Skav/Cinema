@@ -26,11 +26,6 @@ namespace Cinema.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> getRoomById(int id)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-
             var room = await _context.Rooms.FirstOrDefaultAsync(x => x.id == id);
 
             if (room == null)
@@ -45,7 +40,10 @@ namespace Cinema.Controllers
         public async Task<IActionResult> addRoom([FromBody] RoomDTO request)
         {
             if (request == null || request.seatsInRow <= 0 || request.rows <= 0 || request.seatsInRow <= 0 || request.roomNo <= 0)
-                return BadRequest();
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "You have given seats under or equal to 0"
+                }));
 
             var room = mapper.Map<RoomsModel>(request);
             room.dateAdded = DateTime.UtcNow;
@@ -54,7 +52,7 @@ namespace Cinema.Controllers
             {
                 return Conflict(JsonSerializer.Serialize(new
                 {
-                    error = "Object already exists"
+                    error = "Room with given room numer already exists"
                 }));
             }
             await _context.Rooms.AddAsync(room);
@@ -72,7 +70,7 @@ namespace Cinema.Controllers
             {
                 return Conflict(JsonSerializer.Serialize(new
                 {
-                    error = "Object doesn't exists"
+                    error = "Room doesn't exists"
                 }));
             }
             await _context.Rooms.Where(x => x.id == id).ExecuteDeleteAsync();
@@ -85,13 +83,13 @@ namespace Cinema.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> updateRoom(int id, [FromBody] RoomDTO request)
         {
-            if (request == null)
-                return BadRequest();
-
             var dbObject = await _context.Rooms.FindAsync(id);
 
             if (dbObject == null)
-                return NotFound();
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Room doesn't exists!"
+                }));
 
             _context.Entry(dbObject).CurrentValues.SetValues(request);
             await _context.SaveChangesAsync();

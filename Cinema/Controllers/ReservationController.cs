@@ -22,7 +22,7 @@ namespace Cinema.Controllers
             var reservations = await _context.Reservations.ToListAsync();
 
             if (reservations.Count == 0)
-                return NotFound();
+                return Ok(JsonSerializer.Serialize(new {}));
 
             return Ok(reservations);
         }
@@ -34,12 +34,12 @@ namespace Cinema.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             if (userId == null)
-                return NotFound();
+                return Unauthorized();
 
             if (!await _context.Users.Where(x => x.Id == userId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "User with given ID doesn't exists!"
+                    error = "User with given ID doesn't exists!"
                 }));
 
             var reservations = await _context.Reservations.Where(x => x.userId == userId).Where(x => x.status != "Canceled").ToArrayAsync();
@@ -58,12 +58,12 @@ namespace Cinema.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             if (userId == null)
-                return NotFound();
+                return Unauthorized();
 
             if (!await _context.Users.Where(x => x.Id == userId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "User with given ID doesn't exists!"
+                    error = "User with given ID doesn't exists!"
                 }));
 
             var reservations = await _context.Reservations.Where(x => x.userId == userId).Where(x => x.id == reservationId).FirstOrDefaultAsync();
@@ -86,13 +86,16 @@ namespace Cinema.Controllers
             var userData = await _context.Users.Where(x => x.Id == request.userId).FirstOrDefaultAsync();
 
             if (userData == null)
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "User with given ID doesn't exists!"
+                    error = "User with given ID doesn't exists!"
                 }));
 
             if (request.movieShowId == null)
-                return BadRequest();
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Movie show doesn;t exists!"
+                }));
 
             var query = from movieShow in _context.MovieShow
                         join room in _context.Rooms on movieShow.roomId equals room.id
@@ -106,21 +109,21 @@ namespace Cinema.Controllers
 
             var movieShowResponse = await query.FirstOrDefaultAsync();
             if (movieShowResponse == null)
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "MovieShow with given ID doesn't exists!"
+                    error = "MovieShow with given ID doesn't exists!"
                 }));
 
             if (request.seatRow <= 0 || request.seatColumn <= 0)
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "seatRow and seatColumn must be greater than 0!"
+                    error = "seatRow and seatColumn must be greater than 0!"
                 }));
 
             if (request.seatRow > movieShowResponse.rows || request.seatColumn > movieShowResponse.seatsInRow)
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "seatRow or seatColumn are above room limits"
+                    error = "seatRow or seatColumn are above room limits"
                 }));
 
             var reservation = mapper.Map<ReservationModel>(request);
@@ -151,7 +154,7 @@ namespace Cinema.Controllers
                 if (reservedSeat.status != "Cancelled")
                     return Conflict(JsonSerializer.Serialize(new
                     {
-                        Error = $"Seat is reserved",
+                        error = $"Seat is reserved",
                         seatRow = reservation.seatRow,
                         seatColumn = reservation.seatColumn
                     }));
@@ -179,15 +182,18 @@ namespace Cinema.Controllers
                 return Unauthorized();
 
             if (!await _context.Users.Where(x => x.Id == userId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "User with given ID doesn't exists!"
+                    error = "User with given ID doesn't exists!"
                 }));
 
             var reservation = await _context.Reservations.Where(x => x.id == reservationId).FirstOrDefaultAsync();
 
             if (reservation == null)
-                return NotFound();
+                return Conflict(new
+                {
+                    error = "Reservation doesn't exists!"
+                });
 
             var loyalityPoints = await _context.LoyalityPoints.Where(x => x.userId == userId).FirstOrDefaultAsync();
 
@@ -221,15 +227,18 @@ namespace Cinema.Controllers
                 return Unauthorized();
 
             if (!await _context.Users.Where(x => x.Id == userId).AnyAsync())
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
-                    Error = "User with given ID doesn't exists!"
+                    error = "User with given ID doesn't exists!"
                 }));
 
             var reservation = await _context.Reservations.Where(x => x.id == reservationId).FirstOrDefaultAsync();
 
             if (reservation == null)
-                return NotFound();
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Reservation doesn't exists!"
+                }));
 
             _context.Entry(reservation).CurrentValues.SetValues(new { status = "Canceled" });
             await _context.SaveChangesAsync();

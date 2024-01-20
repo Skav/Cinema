@@ -26,9 +26,11 @@ namespace Cinema.Controllers
         [Authorize]
         public async Task<IActionResult> getUserInfo()
         {
-
             var userRole = User.FindFirst(ClaimTypes.Role).Value;
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (userId == null) 
+                return Unauthorized();
 
             var query = from AspNetUsers in _context.Users
                         where AspNetUsers.Id == userId
@@ -41,7 +43,10 @@ namespace Cinema.Controllers
             var userData = await query.FirstOrDefaultAsync();
 
             if (userData == null)
-                return NotFound();
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "User doesnt exists!"
+                }));
             
 
             return Ok(JsonSerializer.Serialize(new
@@ -61,7 +66,7 @@ namespace Cinema.Controllers
             var users = await _context.Users.ToArrayAsync();
 
             if (users == null)
-                return NotFound();
+                return Ok(JsonSerializer.Serialize(new {}));
 
             var usersList = new List<userTransportDTO>{ };
 
@@ -106,7 +111,7 @@ namespace Cinema.Controllers
 
 
             if (request.role != "Admin" && request.role != "Staff" && request.role != "Customer")
-                return BadRequest(JsonSerializer.Serialize(new
+                return Conflict(JsonSerializer.Serialize(new
                 {
                     error = "Wrong role"
                 }));

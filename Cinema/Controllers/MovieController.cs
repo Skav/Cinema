@@ -59,7 +59,7 @@ namespace Cinema.Controllers
             {
                 return Conflict(JsonSerializer.Serialize(new
                 {
-                    error = "Object already exists"
+                    error = "Movie with given title already exists"
                 }));
             }
             await _context.Movies.AddAsync(movie);
@@ -77,7 +77,7 @@ namespace Cinema.Controllers
             {
                 return Conflict(JsonSerializer.Serialize(new
                 {
-                    error = "Object doesn't exists"
+                    error = "Movie doesn't exists"
                 }));
             }
             await _context.Movies.Where(x => x.id == id).ExecuteDeleteAsync();
@@ -90,13 +90,13 @@ namespace Cinema.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> updateMovie(int id, [FromBody] MovieDTO request)
         {
-            if (request == null)
-                return BadRequest();
-
             var dbObject = await _context.Movies.FindAsync(id);
 
             if(dbObject == null)
-                return NotFound();
+                return Conflict(JsonSerializer.Serialize(new
+                {
+                    error = "Movie doesnt exists!"
+                }));
 
             _context.Entry(dbObject).CurrentValues.SetValues(request);
             var result = await _context.SaveChangesAsync();

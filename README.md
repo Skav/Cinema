@@ -4,7 +4,7 @@ App was writen in about a week, after hours - so it lack a proper OOP, some good
 
 # Features
 * Ticket reservation system
-* Easy to use seat picker for movie
+* Easy to use seat picker
 * Reviews system
 * Loyality points system
 * Administration panel that allows to add users, movies, rooms and movie shows
